@@ -21,4 +21,6 @@ public class test : MonoBehaviour
     {
         GetComponent<MeshRenderer>().material = test_material;
     }
+
+    
 }
