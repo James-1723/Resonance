@@ -113,6 +113,7 @@ public class Gamemanager : NetworkBehaviour
                 case "Water_Collider":
                     Debug.Log("Water");
                     ChooseElement(2);
+                    StartCoroutine(WaterRound());
                     break;
                 case "Dirt_Collider":
                     Debug.Log("Dirt");
@@ -139,9 +140,10 @@ public class Gamemanager : NetworkBehaviour
         
     }
 
-    void WaterRound()
+    IEnumerator WaterRound()
     {
-        
+        yield return wait(1);
+        water.SetActive(true);
     }
 
     void DirtRound()
