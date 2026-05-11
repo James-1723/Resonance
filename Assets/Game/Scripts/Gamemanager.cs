@@ -14,14 +14,15 @@ public class Gamemanager : NetworkBehaviour
     [Header("Four Interactions")]
     public GameObject[] basicElements;
     public GameObject wind;
-    public WindInteraction windInteraction;
-    public int roundCount, elementChoice;
+    public GameObject fire;
+    public GameObject water;
+    public GameObject dirt;
 
     [Header("UI")]
     public TextMesh testConnctionUI;
 
     [Header("Player's Data")]
-    public List<char> charHistorys = new List<char>();
+    public List<char> charHistorys;
     public List<char> windChars;
     public List<char> fireChars;
     public List<char> waterChars;
@@ -35,9 +36,8 @@ public class Gamemanager : NetworkBehaviour
 
     void Start()
     {
-        // Round 1 setting
-        roundCount = 0;
-        // windChars = new List<char>();
+        windChars = new List<char>();
+        charHistorys = new List<char>();
         if (audioController != null)
         {
             audioController.PlayAudio("BGM", 0);
@@ -65,7 +65,7 @@ public class Gamemanager : NetworkBehaviour
     {
         if (Input.GetKeyDown(KeyCode.Space))
         {
-            LastRound("Wind");
+            LastRound();
         }
     }
 
@@ -119,7 +119,6 @@ public class Gamemanager : NetworkBehaviour
                     ChooseElement(3);
                     break;
             }
-            roundCount++;
         }
     }
 
@@ -131,12 +130,8 @@ public class Gamemanager : NetworkBehaviour
     
     IEnumerator WindRound()
     {
-        // First Interaction
         yield return wait(3);
-        // audioController.PlayAudio("Wind", 0);
         wind.SetActive(true);
-        // wind.GetComponent<WindInteraction>().wind_1_1(true);
-        // windInteraction.wind_1_1(true);
     }
 
     void FireRound()
@@ -154,26 +149,26 @@ public class Gamemanager : NetworkBehaviour
         
     }
 
-    public void LastRound(string element)
+    public void LastRound()
     {
-        List<char> chars = element switch
-        {
-            "Wind"  => windChars,
-            "Fire"  => fireChars,
-            "Water" => waterChars,
-            "Dirt"  => dirtChars,
-            _       => null
-        };
+        // List<char> chars = element switch
+        // {
+        //     "Wind"  => windChars,
+        //     "Fire"  => fireChars,
+        //     "Water" => waterChars,
+        //     "Dirt"  => dirtChars,
+        //     _       => null
+        // };
 
-        if (chars == null || chars.Count == 0) return;
+        if (charHistorys == null || charHistorys.Count == 0) return;
 
         Vector3 basePos = player_head.transform.position
                         + player_head.transform.forward * wordsForwardDist
                         + Vector3.up * wordsVerticalOffset;
         Vector3 right = player_head.transform.right;
-        float totalWidth = (chars.Count - 1) * wordsSpacing;
+        float totalWidth = (charHistorys.Count - 1) * wordsSpacing;
 
-        for (int i = 0; i < chars.Count; i++)
+        for (int i = 0; i < charHistorys.Count; i++)
         {
             GameObject obj = Instantiate(textVFX_prefab);
             Vector3 pos = basePos + right * (i * wordsSpacing - totalWidth / 2f);
@@ -188,60 +183,65 @@ public class Gamemanager : NetworkBehaviour
             {
                 TMP_Text tmp = tmpChild.GetComponent<TMP_Text>();
                 if (tmp != null)
-                    tmp.text = chars[i].ToString();
+                    tmp.text = charHistorys[i].ToString();
             }
         }
     }
 
-    public void AddCharToHistory(string element, char c)
+    public void AddCharToHistory(char c)
     {
-        switch (element)
-        {
-            case "Wind":
-                windChars.Add(c);
-                break;
-            case "Fire":
-                fireChars.Add(c);
-                break;
-            case "Water":
-                waterChars.Add(c);
-                break;
-            case "Dirt":
-                dirtChars.Add(c);
-                break;
-        }
+        charHistorys.Add(c);
+        // switch (element)
+        // {
+        //     case "Wind":
+        //         windChars.Add(c);
+        //         break;
+        //     case "Fire":
+        //         fireChars.Add(c);
+        //         break;
+        //     case "Water":
+        //         waterChars.Add(c);
+        //         break;
+        //     case "Dirt":
+        //         dirtChars.Add(c);
+        //         break;
+        // }
     }
 
-    public void ShowHistory(string element)
+    public void ShowHistory()
     {
         string history = "";
-        switch (element)
+        for (int i = 0; i < charHistorys.Count; i++)
         {
-            case "Wind":
-                for (int i = 0; i < windChars.Count; i++)
-                {
-                    history += windChars[i];
-                }
-                break;
-            case "Fire":
-                for (int i = 0; i < fireChars.Count; i++)
-                {
-                    history += fireChars[i];
-                }
-                break;
-            case "Water":
-                for (int i = 0; i < waterChars.Count; i++)
-                {
-                    history += waterChars[i];
-                }
-                break;
-            case "Dirt":
-                for (int i = 0; i < dirtChars.Count; i++)
-                {
-                    history += dirtChars[i];
-                }
-                break;
+            history += charHistorys[i];
         }
+        // switch (element)
+        // {
+        //     case "Wind":
+        //         for (int i = 0; i < windChars.Count; i++)
+        //         {
+        //             history += windChars[i];
+        //         }
+        //         break;
+        //     case "Fire":
+        //         for (int i = 0; i < fireChars.Count; i++)
+        //         {
+        //             history += fireChars[i];
+        //         }
+        //         break;
+        //     case "Water":
+        //         for (int i = 0; i < waterChars.Count; i++)
+        //         {
+        //             history += waterChars[i];
+        //         }
+        //         break;
+        //     case "Dirt":
+        //         for (int i = 0; i < dirtChars.Count; i++)
+        //         {
+        //             history += dirtChars[i];
+        //         }
+        //         break;
+        // }
         Debug.Log(history);
     }
 }

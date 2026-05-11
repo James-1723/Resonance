@@ -54,8 +54,6 @@ public class WindInteraction : MonoBehaviour
     
     void Start()
     {
-        // wind_1_1_scene_atomosphere.SetActive(false);
-        // wind_1_1_scene_man.SetActive(false);
         audioController.PlayAudio("Wind", 0);
         StartCoroutine(GameFlow());
         wind_1_open(true);
@@ -86,7 +84,7 @@ public class WindInteraction : MonoBehaviour
         yield return new WaitForSeconds(10f);
         Wind_Control_1("end");
         consoleUI.text = "第一階段結束十秒互動期";
-        gamemanager.ShowHistory("Wind");
+        gamemanager.ShowHistory();
 
         // Second Interaction — accumulate movement data for wind2_detect_time seconds
         audioController.StopAudio("Wind");
@@ -103,7 +101,7 @@ public class WindInteraction : MonoBehaviour
         yield return new WaitForSeconds(15f);
         consoleUI.text = "第二階段結束十五秒互動期";
         Wind_Control_2("end");
-        gamemanager.ShowHistory("Wind");
+        gamemanager.ShowHistory();
 
         // Third Interaction
         audioController.StopAudio("Wind");
@@ -121,7 +119,7 @@ public class WindInteraction : MonoBehaviour
         consoleUI.text = "第三階段結束十秒互動期";
         audioController.StopAudio("Wind");
         Wind_Control_3("end");
-        gamemanager.ShowHistory("Wind");
+        gamemanager.ShowHistory();
     }
 
     void Update()
@@ -316,22 +314,22 @@ public class WindInteraction : MonoBehaviour
         {
             if (wind1ForwardWalkDetected)
             {
-                gamemanager.AddCharToHistory("Wind", '動');
+                gamemanager.AddCharToHistory('動');
                 wind_1_4(true);
             }
             else if (wind1RotationDuration >= wind1HandMoveDuration && wind1RotationDuration > 0f)
             {
-                gamemanager.AddCharToHistory("Wind", '感');
+                gamemanager.AddCharToHistory('感');
                 wind_1_1(true);
             }
             else if (wind1HandMoveDuration > wind1RotationDuration && wind1HandMoveDuration > 0f)
             {
-                gamemanager.AddCharToHistory("Wind", '創');
+                gamemanager.AddCharToHistory('創');
                 wind_1_2(true);
             }
             else
             {
-                gamemanager.AddCharToHistory("Wind", '靜');
+                gamemanager.AddCharToHistory('靜');
                 wind_1_3(true);
             }
         }
@@ -350,13 +348,13 @@ public class WindInteraction : MonoBehaviour
             // 讀取 Update 累積期間的偵測結果，不再重複呼叫 wind_2_detect()
             if (wind2DetectedLatch)
             {
-                gamemanager.AddCharToHistory("Wind", '定');
+                gamemanager.AddCharToHistory('定');
                 audioController.PlayAudio("Wind", 2);
                 windVFX_2.SetBool("GoAhead", true);
             }
             else
             {
-                gamemanager.AddCharToHistory("Wind", '散');
+                gamemanager.AddCharToHistory('散');
                 audioController.PlayAudio("Wind", 3);
                 windVFX_2.SetBool("Vortex", true);
             }
@@ -375,14 +373,14 @@ public class WindInteraction : MonoBehaviour
             float forwardDist = Vector3.Dot(displacement, wind3PhaseStartForward);
             if (forwardDist >= wind3_walk_threshold)
             {
-                gamemanager.AddCharToHistory("Wind", '責');
+                gamemanager.AddCharToHistory('責');
                 audioController.PlayAudio("Wind", 5);
                 consoleUI.text = "Wind_3_RoadWidth";
                 windVFX_3.SetBool("RoadWidth", true);
             }
             else
             {
-                gamemanager.AddCharToHistory("Wind", '逃');
+                gamemanager.AddCharToHistory('逃');
                 audioController.PlayAudio("Wind", 6);
                 consoleUI.text = "Wind_3_Stop";
                 windVFX_3.SetBool("Stop", true);
