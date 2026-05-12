@@ -115,6 +115,7 @@ public class WaterInteraction : ParticleControlTemplate
         yield return new WaitForSeconds(10f);
         Water_Control_3("end");
         consoleUI.text = "第三關結束";
+        gamemanager.LastRound();
     }
 
     void Update()

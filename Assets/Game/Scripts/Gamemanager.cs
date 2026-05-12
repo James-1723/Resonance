@@ -1,9 +1,9 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-// using GDNoob.MyPackage;
 using Unity.Netcode;
 using TMPro;
+using UnityEngine.VFX;
 
 
 public class Gamemanager : NetworkBehaviour
@@ -18,15 +18,24 @@ public class Gamemanager : NetworkBehaviour
     public GameObject water;
     public GameObject dirt;
 
+    [Header("Four Interaction Fade out Effect")]
+    public TextToPointsController[] fadeOutEffects;
+    // public TextToPointsController windFadeOutEffect;
+    // public TextToPointsController fireFadeOutEffect;
+    // public TextToPointsController waterFadeOutEffect;
+    // public TextToPointsController dirtFadeOutEffect;
+
+    [Header("Four Interaction Selected Visual Effect")]
+    public VisualEffect windVFX;
+    public VisualEffect fireVFX;
+    public VisualEffect waterVFX;
+    public VisualEffect dirtVFX;
+
     [Header("UI")]
     public TextMesh testConnctionUI;
 
     [Header("Player's Data")]
     public List<char> charHistorys;
-    public List<char> windChars;
-    public List<char> fireChars;
-    public List<char> waterChars;
-    public List<char> dirtChars;
 
     [Header("Words Exchange")]
     public GameObject textVFX_prefab, player_head;
@@ -36,7 +45,6 @@ public class Gamemanager : NetworkBehaviour
 
     void Start()
     {
-        windChars = new List<char>();
         charHistorys = new List<char>();
         if (audioController != null)
         {
@@ -70,48 +78,64 @@ public class Gamemanager : NetworkBehaviour
 
         if (Input.GetKeyDown(KeyCode.W))
         {
-            ChooseElement(0);
+            StartCoroutine(ChooseElement(0));
             StartCoroutine(WindRound());
         }
         else if (Input.GetKeyDown(KeyCode.E))
         {
-            ChooseElement(1);
+            StartCoroutine(ChooseElement(1));
             // StartCoroutine(FireRound());
         }
         else if (Input.GetKeyDown(KeyCode.R))
         {
-            ChooseElement(2);
+            StartCoroutine(ChooseElement(2));
             StartCoroutine(WaterRound());
         }
         else if (Input.GetKeyDown(KeyCode.T))
         {
-            ChooseElement(3);
+            StartCoroutine(ChooseElement(3));
             // StartCoroutine(DirtRound());
         }
     }
 
-    void ChooseElement(int index)
+    IEnumerator ChooseElement(int index)
     {
+        switch (index)
+        {
+            case 0:
+                windVFX.SetBool("Touch", true);
+                audioController.PlayAudio("SoundEffect", 6);
+                break;
+            case 1:
+                fireVFX.SetBool("Touch", true);
+                audioController.PlayAudio("SoundEffect", 7);
+                break;
+            case 2:
+                waterVFX.SetBool("Touch", true);
+                audioController.PlayAudio("SoundEffect", 8);
+                break;
+            case 3:
+                dirtVFX.SetBool("Touch", true);
+                audioController.PlayAudio("SoundEffect", 9);
+                break;
+        }
+
         for (int i = 0; i < 4; i++)
         {
             if (i != index)
             {
-                basicElements[i].SetActive(false);
+                fadeOutEffects[i].FadeOut = true;
             }
         }
-    }
 
-    void StopElement()
-    {
-
-    }
-
-    void VanishingElement(int index)
-    {
-        // wait(2);
-        // Element should become bigger and start vanishing
-        // Need 4 different prompt tones
-        basicElements[index].SetActive(false);
+        StartCoroutine(wait(3));
+        fadeOutEffects[index].FadeOut = true;
+        StartCoroutine(wait(6));
+        
+        for (int i = 0; i < 4; i++)
+        {
+            basicElements[i].SetActive(false);
+        }    
     }
 
     void OnTriggerEnter(Collider collider)
@@ -124,21 +148,21 @@ public class Gamemanager : NetworkBehaviour
             {
                 case "Wind_Collider":
                     Debug.Log("Wind");
-                    ChooseElement(0);
+                    StartCoroutine(ChooseElement(0));
                     StartCoroutine(WindRound());
                     break;
                 case "Fire_Collider":
                     Debug.Log("Fire");
-                    ChooseElement(1);
+                    StartCoroutine(ChooseElement(1));
                     break;
                 case "Water_Collider":
                     Debug.Log("Water");
-                    ChooseElement(2);
+                    StartCoroutine(ChooseElement(2));
                     StartCoroutine(WaterRound());
                     break;
                 case "Dirt_Collider":
                     Debug.Log("Dirt");
-                    ChooseElement(3);
+                    StartCoroutine(ChooseElement(3));
                     break;
             }
         }

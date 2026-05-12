@@ -14,7 +14,7 @@ using UnityEngine.VFX;
 using TMPro;
 
 [ExecuteAlways]
-public class TextToVFX_Combined_Minimal : MonoBehaviour
+public class TextToPointsController : MonoBehaviour
 {
     [Header("Inputs (only)")]
     public TextMeshPro tmp;

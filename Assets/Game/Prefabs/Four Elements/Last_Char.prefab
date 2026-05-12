@@ -76,7 +76,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d5a57f767e5e46a458fc5d3c628d0cbb, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  GlobalObjectIdHash: 1654888286
+  GlobalObjectIdHash: 1249667430
   InScenePlacedSourceGlobalObjectIdHash: 0
   AlwaysReplicateAsRoot: 1
   SynchronizeTransform: 1
@@ -408,7 +408,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d5a57f767e5e46a458fc5d3c628d0cbb, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  GlobalObjectIdHash: 1654888286
+  GlobalObjectIdHash: 3113425526
   InScenePlacedSourceGlobalObjectIdHash: 0
   AlwaysReplicateAsRoot: 1
   SynchronizeTransform: 1
@@ -476,7 +476,7 @@ PrefabInstance:
     - target: {fileID: 1102228823126799133, guid: 3a10dc2f1fe8443ee8c6cf7e595825aa,
         type: 3}
       propertyPath: m_PropertySheet.m_Bool.m_Array.Array.data[1].m_Value
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 1102228823126799133, guid: 3a10dc2f1fe8443ee8c6cf7e595825aa,
         type: 3}
@@ -497,6 +497,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_PropertySheet.m_Uint.m_Array.Array.data[0].m_Value
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1102228823126799133, guid: 3a10dc2f1fe8443ee8c6cf7e595825aa,
+        type: 3}
+      propertyPath: m_PropertySheet.m_Uint.m_Array.Array.data[1].m_Value
+      value: 5000
       objectReference: {fileID: 0}
     - target: {fileID: 1102228823126799133, guid: 3a10dc2f1fe8443ee8c6cf7e595825aa,
         type: 3}
@@ -526,6 +531,11 @@ PrefabInstance:
     - target: {fileID: 1102228823126799133, guid: 3a10dc2f1fe8443ee8c6cf7e595825aa,
         type: 3}
       propertyPath: m_PropertySheet.m_Bool.m_Array.Array.data[2].m_Overridden
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 1102228823126799133, guid: 3a10dc2f1fe8443ee8c6cf7e595825aa,
+        type: 3}
+      propertyPath: m_PropertySheet.m_Uint.m_Array.Array.data[1].m_Overridden
       value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 1102228823126799133, guid: 3a10dc2f1fe8443ee8c6cf7e595825aa,
@@ -662,7 +672,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d5a57f767e5e46a458fc5d3c628d0cbb, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  GlobalObjectIdHash: 1654888286
+  GlobalObjectIdHash: 2382261291
   InScenePlacedSourceGlobalObjectIdHash: 0
   AlwaysReplicateAsRoot: 1
   SynchronizeTransform: 1
@@ -838,7 +848,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d5a57f767e5e46a458fc5d3c628d0cbb, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  GlobalObjectIdHash: 1654888286
+  GlobalObjectIdHash: 57401010
   InScenePlacedSourceGlobalObjectIdHash: 0
   AlwaysReplicateAsRoot: 1
   SynchronizeTransform: 1
@@ -972,7 +982,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d5a57f767e5e46a458fc5d3c628d0cbb, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  GlobalObjectIdHash: 1654888286
+  GlobalObjectIdHash: 2071373767
   InScenePlacedSourceGlobalObjectIdHash: 0
   AlwaysReplicateAsRoot: 1
   SynchronizeTransform: 1
