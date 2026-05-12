@@ -67,6 +67,27 @@ public class Gamemanager : NetworkBehaviour
         {
             LastRound();
         }
+
+        if (Input.GetKeyDown(KeyCode.W))
+        {
+            ChooseElement(0);
+            StartCoroutine(WindRound());
+        }
+        else if (Input.GetKeyDown(KeyCode.E))
+        {
+            ChooseElement(1);
+            // StartCoroutine(FireRound());
+        }
+        else if (Input.GetKeyDown(KeyCode.R))
+        {
+            ChooseElement(2);
+            StartCoroutine(WaterRound());
+        }
+        else if (Input.GetKeyDown(KeyCode.T))
+        {
+            ChooseElement(3);
+            // StartCoroutine(DirtRound());
+        }
     }
 
     void ChooseElement(int index)
@@ -174,11 +195,11 @@ public class Gamemanager : NetworkBehaviour
         {
             GameObject obj = Instantiate(textVFX_prefab);
             Vector3 pos = basePos + right * (i * wordsSpacing - totalWidth / 2f);
-            // obj.transform.position = pos;
+            obj.transform.position = pos;
 
-            Transform vfxChild = obj.transform.Find("Wind_VFX");
-            if (vfxChild != null)
-                vfxChild.position = pos;
+            // Transform vfxChild = obj.transform.Find("Wind_VFX");
+            // if (vfxChild != null)
+            //     vfxChild.position = pos;
 
             Transform tmpChild = obj.transform.Find("Wind_TMP");
             if (tmpChild != null)

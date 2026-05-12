@@ -16,7 +16,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!4 &3818444224225831334
 Transform:
   m_ObjectHideFlags: 0
@@ -47,3 +47,5 @@ MonoBehaviour:
   tmp: {fileID: 0}
   vfx: {fileID: 0}
   splitter: {fileID: 0}
+  FadeOut: 0
+  timeTransitionDuration: 3

@@ -15,9 +15,9 @@ public class WaterInteraction : ParticleControlTemplate
     public VisualEffect water_3_1_vfx;
 
     [Header("Water 1 Detection")]
-    public float water1_detect_time = 5f;
-    public float water1_hand_up_threshold = 0.5f;
-    public float water1_head_move_threshold = 0.25f;
+    public float water1_detect_time = 10f;
+    public float water1_hand_up_threshold = 0.25f;
+    public float water1_head_move_threshold = 0.5f;
 
     private bool water1PhaseActive = false;
     private bool water1HandUpDetected = false;
@@ -27,7 +27,7 @@ public class WaterInteraction : ParticleControlTemplate
 
     [Header("Water 2 Detection")]
     public float water2_detect_time = 5f;
-    public float water2_head_move_threshold = 0.5f;
+    public float water2_head_move_threshold = 0.25f;
 
     private bool water2PhaseActive = false;
     private bool water2HeadMoveDetected = false;
@@ -35,8 +35,8 @@ public class WaterInteraction : ParticleControlTemplate
 
     [Header("Water 3 Detection")]
     public float water3_detect_time = 5f;
-    public float water3_head_move_threshold = 0.5f;
-    public float water3_hand_move_threshold = 1f;
+    public float water3_head_move_threshold = 0.25f;
+    public float water3_hand_move_threshold = 0.25f;
 
     private bool water3PhaseActive = false;
     private bool water3MoveDetected = false;
@@ -55,7 +55,9 @@ public class WaterInteraction : ParticleControlTemplate
         // 初始狀態+下雨
         yield return new WaitForSeconds(1f);
         water_1_1(true);
-        yield return new WaitForSeconds(2f);
+        consoleUI.text = "水初始狀態開始等待五秒";
+        yield return new WaitForSeconds(5f);
+        consoleUI.text = "下雨開始，等待十秒檢查ABC";
         water_1_2_rain(true);
 
         // 判斷手是否舉起來 -> A, B, C
@@ -65,15 +67,20 @@ public class WaterInteraction : ParticleControlTemplate
         water1HeadMoveDetected = false;
         water1PhaseActive = true;
         yield return new WaitForSeconds(water1_detect_time);
+        consoleUI.text = "結束ABC偵測，開始執行10秒動畫";
         water1PhaseActive = false;
         Water_Control_1("start");
         yield return new WaitForSeconds(10f);
         Water_Control_1("end");
+        audioController.StopAudio("Addition");
+        consoleUI.text = "第一關結束";
         
         // 第二關
         // 凝結初始狀態
+        consoleUI.text = "水凝結初始狀態，等待10秒";
         water_2(true);
-        yield return new WaitForSeconds(5f);
+        yield return new WaitForSeconds(10f);
+        consoleUI.text = "10秒等待結束，觸發水傷口狀態，開始5秒偵測";
         water_2_wound(true);
 
         // 判斷頭部水平位移 -> 2A, 2B
@@ -81,15 +88,19 @@ public class WaterInteraction : ParticleControlTemplate
         water2HeadMoveDetected = false;
         water2PhaseActive = true;
         yield return new WaitForSeconds(water2_detect_time);
+        consoleUI.text = "結束2A, 2B偵測，開始執行10秒動畫";
         water2PhaseActive = false;
         Water_Control_2("start");
         yield return new WaitForSeconds(10f);
         Water_Control_2("end");
+        consoleUI.text = "第二關結束";
 
         // 第三關
         // 初始狀態
+        consoleUI.text = "第三關初始狀態，等待5秒";
         water_3(true);
         yield return new WaitForSeconds(5f);
+        consoleUI.text = "結束5秒間隔，水上升，開始5秒偵測3A, 3B";
         water_3_rise(true);
 
         // 判斷頭部或手部位移 -> 3A, 3B
@@ -98,10 +109,12 @@ public class WaterInteraction : ParticleControlTemplate
         water3MoveDetected = false;
         water3PhaseActive = true;
         yield return new WaitForSeconds(water3_detect_time);
+        consoleUI.text = "結束3A, 3B偵測，開始執行10秒動畫";
         water3PhaseActive = false;
         Water_Control_3("start");
         yield return new WaitForSeconds(10f);
         Water_Control_3("end");
+        consoleUI.text = "第三關結束";
     }
 
     void Update()
@@ -205,18 +218,18 @@ public class WaterInteraction : ParticleControlTemplate
         }
     }
 
-    private void water_1_1(bool control) => PrefabControl(water_1_1_prefab, control, 0);
-    private void water_1_2_rain(bool control) => PrefabControl(water_1_2_rain_prefab, control, 1);
-    private void water_1_A(bool control) => VFXControl(water_1_1_vfx, "Ripple", 2, control);
-    private void water_1_B(bool control) => VFXControl(water_1_1_vfx, "B", 3, control);
-    private void water_1_B_hand_water(bool control) => PrefabControl(water_1_B_hand_water_prefab, control);
-    private void water_1_C(bool control) => VFXControl(water_1_1_vfx, "C", 4, control);
-    private void water_2(bool control) => VFXControl(water_1_1_vfx, "Second", 5, control);
-    private void water_2_wound(bool control) => VFXControl(water_1_1_vfx, "Wound", 6, control);
-    private void water_2_A(bool control) => VFXControl(water_1_1_vfx, "ATurnYellow", 7, control);
-    private void water_2_B(bool control) => VFXControl(water_1_1_vfx, "BTurnBrown", 8, control);
-    private void water_3(bool control) => PrefabControl(water_3_1_prefab, control, 9);
-    private void water_3_rise(bool control) => VFXControl(water_3_1_vfx, "WaterHeight", -1, control);
-    private void water_3_A(bool control) => VFXControl(water_3_1_vfx, "ATransparent", -1, control);
-    private void water_3_B(bool control) => VFXControl(water_3_1_vfx, "Shoot", -1, control);
+    private void water_1_1(bool control) => PrefabControl("Water", water_1_1_prefab, control, 0);
+    private void water_1_2_rain(bool control) => PrefabControl("Addition", water_1_2_rain_prefab, control, 0);
+    private void water_1_A(bool control) => VFXControl("SoundEffect", water_1_1_vfx, "Ripple", 1, control);
+    private void water_1_B(bool control) => VFXControl("SoundEffect", water_1_1_vfx, "B", 2, control);
+    private void water_1_B_hand_water(bool control) => PrefabControl("Water", water_1_B_hand_water_prefab, control);
+    private void water_1_C(bool control) => VFXControl("SoundEffect", water_1_1_vfx, "C", 3, control);
+    private void water_2(bool control) => VFXControl("Water", water_1_1_vfx, "Second", 1, control);
+    private void water_2_wound(bool control) => VFXControl("Water", water_1_1_vfx, "Wound", 2, control);
+    private void water_2_A(bool control) => VFXControl("SoundEffect", water_1_1_vfx, "ATurnYellow", 4, control);
+    private void water_2_B(bool control) => VFXControl("SoundEffect", water_1_1_vfx, "BTurnBrown", 5, control);
+    private void water_3(bool control) => PrefabControl("Water", water_3_1_prefab, control, 3);
+    private void water_3_rise(bool control) => VFXControlFloat("Water", water_3_1_vfx, "WaterHeight", -1, control, 30f);
+    private void water_3_A(bool control) => VFXControl("SoundEffect", water_3_1_vfx, "ATransparent", 4, control);
+    private void water_3_B(bool control) => VFXControl("SoundEffect", water_3_1_vfx, "BShoot", 5, control);
 }

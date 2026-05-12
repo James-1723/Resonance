@@ -21,22 +21,36 @@ public class TextToVFX_Combined_Minimal : MonoBehaviour
     public VisualEffect vfx;
     public Transform splitter;
 
+    [Header("Point Sampling")]
+    [Tooltip("採樣嘗試次數的倍數上限（避免無窮迴圈）。目標粒子數請直接在 VFX Inspector 的 TargetPointCount 欄位設定")]
+    public int maxAttemptsMultiplier = 20;
+
+    [Header("Time Animation")]
+    [Tooltip("若打勾，VFX 裡的 Time 從 0 漸變到 1")]
+    public bool FadeOut = false;
+    [Tooltip("漸進到 1 所需的秒數")]
+    public float timeTransitionDuration = 1f;
+
+    private float _timeValue = 0f;
+
     // -----------------------------
     // VFX property names
     // -----------------------------
-    const string VFX_MESH_PROP  = "PointMesh";
-    const string VFX_COUNT_PROP = "PointCount";
+    const string VFX_MESH_PROP         = "PointMesh";
+    const string VFX_COUNT_PROP        = "PointCount";       // C# 寫入：實際採樣後的粒子數
+    const string VFX_TARGET_COUNT_PROP = "TargetPointCount"; // C# 讀取：使用者在 VFX Inspector 設定的目標數量
 
     // Split center only (params tuned in VFX Graph)
-    const string SPLIT_CENTER   = "SplitCenter";
+    const string SPLIT_CENTER    = "SplitCenter";
+    const string WORD_POSITION   = "WordPosition";
+    const string VFX_TIME_PROP   = "Time";
+    const string VFX_FADEOUT_PROP = "FadeOut";
     // NOTE: SplitRadius / SplitFalloff / SplitStrength are NOT written by C#
     // and should be exposed & tuned in VFX Graph.
 
     // -----------------------------
-    // Point sampling settings (still hard-coded in this version)
+    // Point sampling settings
     // -----------------------------
-    const int   SAMPLES_PER_CHAR = 4000; // attempts per visible character
-    const float KEEP_RATIO       = 0.60f;
     const float SDF_THRESHOLD    = 0.50f;
     const float Z_PLANE          = 0f;
 
@@ -58,6 +72,8 @@ public class TextToVFX_Combined_Minimal : MonoBehaviour
         EnsureMesh();
         TryRebuild(force: true);
         PushSplitCenter();
+        PushWordPosition();
+        UpdateTimeParameter();
     }
 
     void OnDisable() => ReleaseAll();
@@ -68,6 +84,8 @@ public class TextToVFX_Combined_Minimal : MonoBehaviour
         EnsureMesh();
         TryRebuild(force: true);
         PushSplitCenter();
+        PushWordPosition();
+        UpdateTimeParameter();
     }
 
     void Update()
@@ -79,6 +97,8 @@ public class TextToVFX_Combined_Minimal : MonoBehaviour
 
         // Always update split center (moving sphere updates every frame)
         PushSplitCenter();
+        PushWordPosition();
+        UpdateTimeParameter();
     }
 
     // -----------------------------
@@ -166,9 +186,27 @@ public class TextToVFX_Combined_Minimal : MonoBehaviour
             return;
         }
 
-        int approx = Mathf.Max(1, ti.characterCount * Mathf.CeilToInt(SAMPLES_PER_CHAR * Mathf.Clamp01(KEEP_RATIO)));
-        var positions = new List<Vector3>(approx);
+        // --- 第一輪：統計可見字符數量 ---
+        int visibleCharCount = 0;
+        for (int i = 0; i < ti.characterCount; i++)
+            if (ti.characterInfo[i].isVisible) visibleCharCount++;
 
+        if (visibleCharCount == 0) { PushEmptyMesh(); return; }
+
+        // 直接從 VFX Inspector 的 TargetPointCount 讀取目標粒子數
+        // （該屬性序列化在 prefab 裡，重開遊戲也不會消失）
+        int totalTarget = 1000;
+        if (vfx != null && vfx.HasUInt(VFX_TARGET_COUNT_PROP))
+            totalTarget = (int)vfx.GetUInt(VFX_TARGET_COUNT_PROP);
+        totalTarget = Mathf.Max(1, totalTarget);
+
+        // 每個字符的目標點數（平均分配）
+        int targetPerChar = Mathf.Max(1, Mathf.RoundToInt((float)totalTarget / visibleCharCount));
+        int maxAttempts   = targetPerChar * Mathf.Max(1, maxAttemptsMultiplier);
+
+        var positions = new List<Vector3>(totalTarget);
+
+        // --- 第二輪：逐字符採樣直到達到目標 ---
         for (int i = 0; i < ti.characterCount; i++)
         {
             var ch = ti.characterInfo[i];
@@ -214,11 +252,10 @@ public class TextToVFX_Combined_Minimal : MonoBehaviour
             Vector2 u0 = mi.uvs0[v + 0], u1 = mi.uvs0[v + 1];
             Vector2 u2 = mi.uvs0[v + 2], u3 = mi.uvs0[v + 3];
 
-            int tries = Mathf.Max(1, SAMPLES_PER_CHAR);
-            int targetKeep = Mathf.Max(1, Mathf.RoundToInt(tries * Mathf.Clamp01(KEEP_RATIO)));
             int kept = 0;
 
-            for (int t = 0; t < tries && kept < targetKeep; t++)
+            // 採樣直到該字符達到目標點數，或超過最大嘗試次數
+            for (int t = 0; t < maxAttempts && kept < targetPerChar; t++)
             {
                 bool firstTri = Random.value < 0.5f;
 
@@ -302,6 +339,36 @@ public class TextToVFX_Combined_Minimal : MonoBehaviour
         // IMPORTANT:
         // Do NOT write SplitRadius / SplitFalloff / SplitStrength here.
         // Expose and tweak them directly in VFX Graph.
+    }
+
+    void PushWordPosition()
+    {
+        if (vfx == null || tmp == null) return;
+
+        // Setting WordPosition to TMP's world position
+        vfx.SetVector3(WORD_POSITION, tmp.transform.position);
+    }
+
+    void UpdateTimeParameter()
+    {
+        if (vfx == null) return;
+
+        // 同步 FadeOut 布林值給 VFX
+        vfx.SetBool(VFX_FADEOUT_PROP, FadeOut);
+
+        if (Application.isPlaying)
+        {
+            // 在 Play Mode 時，根據 FadeOut 布林值平滑漸進 (0 -> 1 或是 1 -> 0)
+            float targetValue = FadeOut ? 1f : 0f;
+            _timeValue = Mathf.MoveTowards(_timeValue, targetValue, Time.deltaTime / Mathf.Max(0.001f, timeTransitionDuration));
+        }
+        else
+        {
+            // 在 Edit Mode 直接切換數值以利預覽
+            _timeValue = FadeOut ? 1f : 0f;
+        }
+
+        vfx.SetFloat(VFX_TIME_PROP, _timeValue);
     }
 
     // -----------------------------

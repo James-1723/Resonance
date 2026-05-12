@@ -47,3 +47,5 @@ MonoBehaviour:
   tmp: {fileID: 0}
   vfx: {fileID: 0}
   splitter: {fileID: 0}
+  FadeOut: 0
+  timeTransitionDuration: 6

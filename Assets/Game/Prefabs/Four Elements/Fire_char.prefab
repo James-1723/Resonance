@@ -118,7 +118,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d5a57f767e5e46a458fc5d3c628d0cbb, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  GlobalObjectIdHash: 3879641464
+  GlobalObjectIdHash: 445307248
   InScenePlacedSourceGlobalObjectIdHash: 0
   AlwaysReplicateAsRoot: 0
   SynchronizeTransform: 1
@@ -177,7 +177,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d5a57f767e5e46a458fc5d3c628d0cbb, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  GlobalObjectIdHash: 3879641464
+  GlobalObjectIdHash: 2930170082
   InScenePlacedSourceGlobalObjectIdHash: 0
   AlwaysReplicateAsRoot: 0
   SynchronizeTransform: 1
@@ -294,7 +294,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d5a57f767e5e46a458fc5d3c628d0cbb, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  GlobalObjectIdHash: 3879641464
+  GlobalObjectIdHash: 3810461276
   InScenePlacedSourceGlobalObjectIdHash: 0
   AlwaysReplicateAsRoot: 0
   SynchronizeTransform: 1
@@ -376,12 +376,17 @@ PrefabInstance:
     - target: {fileID: 8986372277673552149, guid: 23444709eb864486e8f156f2c46019d5,
         type: 3}
       propertyPath: m_PropertySheet.m_Float.m_Array.Array.size
-      value: 4
+      value: 5
       objectReference: {fileID: 0}
     - target: {fileID: 8986372277673552149, guid: 23444709eb864486e8f156f2c46019d5,
         type: 3}
       propertyPath: m_PropertySheet.m_Float.m_Array.Array.data[3].m_Name
       value: PointSize
+      objectReference: {fileID: 0}
+    - target: {fileID: 8986372277673552149, guid: 23444709eb864486e8f156f2c46019d5,
+        type: 3}
+      propertyPath: m_PropertySheet.m_Float.m_Array.Array.data[4].m_Name
+      value: Time
       objectReference: {fileID: 0}
     - target: {fileID: 8986372277673552149, guid: 23444709eb864486e8f156f2c46019d5,
         type: 3}
@@ -392,6 +397,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_PropertySheet.m_Float.m_Array.Array.data[3].m_Value
       value: 0.05
+      objectReference: {fileID: 0}
+    - target: {fileID: 8986372277673552149, guid: 23444709eb864486e8f156f2c46019d5,
+        type: 3}
+      propertyPath: m_PropertySheet.m_Float.m_Array.Array.data[4].m_Value
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 8986372277673552149, guid: 23444709eb864486e8f156f2c46019d5,
         type: 3}
@@ -412,6 +422,16 @@ PrefabInstance:
         type: 3}
       propertyPath: m_PropertySheet.m_Vector3f.m_Array.Array.data[0].m_Value.z
       value: -13.43
+      objectReference: {fileID: 0}
+    - target: {fileID: 8986372277673552149, guid: 23444709eb864486e8f156f2c46019d5,
+        type: 3}
+      propertyPath: m_PropertySheet.m_Vector3f.m_Array.Array.data[1].m_Value.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8986372277673552149, guid: 23444709eb864486e8f156f2c46019d5,
+        type: 3}
+      propertyPath: m_PropertySheet.m_Vector3f.m_Array.Array.data[1].m_Value.y
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 8986372277673552149, guid: 23444709eb864486e8f156f2c46019d5,
         type: 3}
@@ -445,7 +465,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d5a57f767e5e46a458fc5d3c628d0cbb, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  GlobalObjectIdHash: 3879641464
+  GlobalObjectIdHash: 452311345
   InScenePlacedSourceGlobalObjectIdHash: 0
   AlwaysReplicateAsRoot: 0
   SynchronizeTransform: 1
@@ -646,7 +666,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d5a57f767e5e46a458fc5d3c628d0cbb, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  GlobalObjectIdHash: 3879641464
+  GlobalObjectIdHash: 882469512
   InScenePlacedSourceGlobalObjectIdHash: 0
   AlwaysReplicateAsRoot: 0
   SynchronizeTransform: 1

@@ -4,8 +4,8 @@ using UnityEngine;
 
 public class AudioController : MonoBehaviour
 {
-    public AudioSource bgmPlayer, firePlayer, windPlayer, waterPlayer, dirtPlayer;
-    public AudioClip[] bgmClips, fireClips, windClips, waterClips, dirtClips;
+    public AudioSource effectPlayer, firePlayer, windPlayer, waterPlayer, dirtPlayer, backupPlayer;
+    public AudioClip[] bgmClips, fireClips, windClips, waterClips, dirtClips, backupClips;
 
     void Start()
     {
@@ -21,9 +21,9 @@ public class AudioController : MonoBehaviour
     {
         switch (elementType)
         {
-            case "BGM":
-                bgmPlayer.clip = bgmClips[index];
-                bgmPlayer.Play();
+            case "SoundEffect":
+                effectPlayer.clip = bgmClips[index];
+                effectPlayer.Play();
                 break;
             case "Wind":
                 windPlayer.clip = windClips[index];
@@ -41,28 +41,40 @@ public class AudioController : MonoBehaviour
                 dirtPlayer.clip = dirtClips[index];
                 dirtPlayer.Play();
                 break;
+            case "Addition":
+                backupPlayer.clip = backupClips[index];
+                backupPlayer.Play();
+                break;
         }
     }
 
-    public void StopAudio(string elementType)
+    public void StopAudio(string elementType, float fadeDuration = 2f)
     {
-        switch (elementType)
+        AudioSource target = elementType switch
         {
-            case "BGM":
-                bgmPlayer.Stop();
-                break;
-            case "Fire":
-                firePlayer.Stop();
-                break;
-            case "Water":
-                waterPlayer.Stop();
-                break;
-            case "Wind":
-                windPlayer.Stop();
-                break;
-            case "Dirt":
-                dirtPlayer.Stop();
-                break;
+            "SoundEffect" => effectPlayer,
+            "Fire"        => firePlayer,
+            "Water"       => waterPlayer,
+            "Wind"        => windPlayer,
+            "Dirt"        => dirtPlayer,
+            "Addition"    => backupPlayer,
+            _             => null
+        };
+        if (target != null)
+            StartCoroutine(FadeOut(target, fadeDuration));
+    }
+
+    private IEnumerator FadeOut(AudioSource source, float duration)
+    {
+        float startVolume = source.volume;
+        float elapsed = 0f;
+        while (elapsed < duration)
+        {
+            elapsed += Time.deltaTime;
+            source.volume = Mathf.Lerp(startVolume, 0f, elapsed / duration);
+            yield return null;
         }
+        source.Stop();
+        source.volume = startVolume;
     }
 }
