@@ -120,6 +120,7 @@ public class WindInteraction : MonoBehaviour
         audioController.StopAudio("Wind");
         Wind_Control_3("end");
         gamemanager.ShowHistory();
+        gamemanager.LastRound();
     }
 
     void Update()

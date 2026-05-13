@@ -20,10 +20,6 @@ public class Gamemanager : NetworkBehaviour
 
     [Header("Four Interaction Fade out Effect")]
     public TextToPointsController[] fadeOutEffects;
-    // public TextToPointsController windFadeOutEffect;
-    // public TextToPointsController fireFadeOutEffect;
-    // public TextToPointsController waterFadeOutEffect;
-    // public TextToPointsController dirtFadeOutEffect;
 
     [Header("Four Interaction Selected Visual Effect")]
     public VisualEffect windVFX;
@@ -48,7 +44,7 @@ public class Gamemanager : NetworkBehaviour
         charHistorys = new List<char>();
         if (audioController != null)
         {
-            audioController.PlayAudio("BGM", 0);
+            audioController.PlayAudio("SoundEffect", 0);
         }
 
         // Set Connection Status UI
@@ -78,22 +74,20 @@ public class Gamemanager : NetworkBehaviour
 
         if (Input.GetKeyDown(KeyCode.W))
         {
-            StartCoroutine(ChooseElement(0));
-            StartCoroutine(WindRound());
+            StartCoroutine(ExecuteAfterChooseElement(0, WindRound()));
         }
         else if (Input.GetKeyDown(KeyCode.E))
         {
-            StartCoroutine(ChooseElement(1));
+            StartCoroutine(ExecuteAfterChooseElement(1, null));
             // StartCoroutine(FireRound());
         }
         else if (Input.GetKeyDown(KeyCode.R))
         {
-            StartCoroutine(ChooseElement(2));
-            StartCoroutine(WaterRound());
+            StartCoroutine(ExecuteAfterChooseElement(2, WaterRound()));
         }
         else if (Input.GetKeyDown(KeyCode.T))
         {
-            StartCoroutine(ChooseElement(3));
+            StartCoroutine(ExecuteAfterChooseElement(3, null));
             // StartCoroutine(DirtRound());
         }
     }
@@ -128,14 +122,23 @@ public class Gamemanager : NetworkBehaviour
             }
         }
 
-        StartCoroutine(wait(3));
+        yield return wait(3);
         fadeOutEffects[index].FadeOut = true;
-        StartCoroutine(wait(6));
+        yield return wait(6);
         
         for (int i = 0; i < 4; i++)
         {
             basicElements[i].SetActive(false);
         }    
+    }
+
+    IEnumerator ExecuteAfterChooseElement(int index, IEnumerator nextCoroutine)
+    {
+        yield return StartCoroutine(ChooseElement(index));
+        if (nextCoroutine != null)
+        {
+            yield return StartCoroutine(nextCoroutine);
+        }
     }
 
     void OnTriggerEnter(Collider collider)
@@ -148,21 +151,19 @@ public class Gamemanager : NetworkBehaviour
             {
                 case "Wind_Collider":
                     Debug.Log("Wind");
-                    StartCoroutine(ChooseElement(0));
-                    StartCoroutine(WindRound());
+                    StartCoroutine(ExecuteAfterChooseElement(0, WindRound()));
                     break;
                 case "Fire_Collider":
                     Debug.Log("Fire");
-                    StartCoroutine(ChooseElement(1));
+                    StartCoroutine(ExecuteAfterChooseElement(1, FireRound()));
                     break;
                 case "Water_Collider":
                     Debug.Log("Water");
-                    StartCoroutine(ChooseElement(2));
-                    StartCoroutine(WaterRound());
+                    StartCoroutine(ExecuteAfterChooseElement(2, WaterRound()));
                     break;
                 case "Dirt_Collider":
                     Debug.Log("Dirt");
-                    StartCoroutine(ChooseElement(3));
+                    StartCoroutine(ExecuteAfterChooseElement(3, null));
                     break;
             }
         }
@@ -180,9 +181,10 @@ public class Gamemanager : NetworkBehaviour
         wind.SetActive(true);
     }
 
-    void FireRound()
+    IEnumerator FireRound()
     {
-        
+        yield return wait(3);
+        fire.SetActive(true);
     }
 
     IEnumerator WaterRound()
