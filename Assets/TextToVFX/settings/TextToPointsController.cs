@@ -29,9 +29,16 @@ public class TextToPointsController : MonoBehaviour
     [Tooltip("若打勾，VFX 裡的 Time 從 0 漸變到 1")]
     public bool FadeOut = false;
     [Tooltip("漸進到 1 所需的秒數")]
-    public float timeTransitionDuration = 1f;
+    public float timeTransitionDuration = 6f;
+
+    [Header("Off Animation")]
+    [Tooltip("若打勾，VFX 裡的 OffTime 從 0 漸變到 1")]
+    public bool Off = false;
+    [Tooltip("OffTime 漸進到 1 所需的秒數")]
+    public float offTransitionDuration = 6f;
 
     private float _timeValue = 0f;
+    private float _offValue = 0f;
 
     // -----------------------------
     // VFX property names
@@ -43,8 +50,10 @@ public class TextToPointsController : MonoBehaviour
     // Split center only (params tuned in VFX Graph)
     const string SPLIT_CENTER    = "SplitCenter";
     const string WORD_POSITION   = "WordPosition";
-    const string VFX_TIME_PROP   = "Time";
-    const string VFX_FADEOUT_PROP = "FadeOut";
+    const string VFX_TIME_PROP    = "Time";
+    const string VFX_FADEOUT_PROP  = "FadeOut";
+    const string VFX_OFF_PROP      = "Off";
+    const string VFX_OFF_TIME_PROP = "OffTime";
     // NOTE: SplitRadius / SplitFalloff / SplitStrength are NOT written by C#
     // and should be exposed & tuned in VFX Graph.
 
@@ -74,6 +83,7 @@ public class TextToPointsController : MonoBehaviour
         PushSplitCenter();
         PushWordPosition();
         UpdateTimeParameter();
+        UpdateOffParameter();
     }
 
     void OnDisable() => ReleaseAll();
@@ -86,6 +96,7 @@ public class TextToPointsController : MonoBehaviour
         PushSplitCenter();
         PushWordPosition();
         UpdateTimeParameter();
+        UpdateOffParameter();
     }
 
     void Update()
@@ -99,6 +110,7 @@ public class TextToPointsController : MonoBehaviour
         PushSplitCenter();
         PushWordPosition();
         UpdateTimeParameter();
+        UpdateOffParameter();
     }
 
     // -----------------------------
@@ -369,6 +381,28 @@ public class TextToPointsController : MonoBehaviour
         }
 
         vfx.SetFloat(VFX_TIME_PROP, _timeValue);
+    }
+
+    void UpdateOffParameter()
+    {
+        if (vfx == null) return;
+
+        // 同步 Off 布林值給 VFX
+        vfx.SetBool(VFX_OFF_PROP, Off);
+
+        if (Application.isPlaying)
+        {
+            // 在 Play Mode 時，根據 Off 布林值平滑漸進 (0 -> 1)
+            float targetValue = Off ? 1f : 0f;
+            _offValue = Mathf.MoveTowards(_offValue, targetValue, Time.deltaTime / Mathf.Max(0.001f, offTransitionDuration));
+        }
+        else
+        {
+            // 在 Edit Mode 直接切換數值以利預覽
+            _offValue = Off ? 1f : 0f;
+        }
+
+        vfx.SetFloat(VFX_OFF_TIME_PROP, _offValue);
     }
 
     // -----------------------------

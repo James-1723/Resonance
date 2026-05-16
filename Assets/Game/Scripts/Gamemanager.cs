@@ -123,7 +123,7 @@ public class Gamemanager : NetworkBehaviour
         }
 
         yield return wait(3);
-        fadeOutEffects[index].FadeOut = true;
+        fadeOutEffects[index].Off = true;
         yield return wait(6);
         
         for (int i = 0; i < 4; i++)

@@ -419,17 +419,22 @@ PrefabInstance:
     - target: {fileID: 8388639979114973252, guid: bace132855e73470c9527eede56cf494,
         type: 3}
       propertyPath: m_PropertySheet.m_Bool.m_Array.Array.size
-      value: 3
+      value: 4
       objectReference: {fileID: 0}
     - target: {fileID: 8388639979114973252, guid: bace132855e73470c9527eede56cf494,
         type: 3}
       propertyPath: m_PropertySheet.m_Float.m_Array.Array.size
-      value: 5
+      value: 6
       objectReference: {fileID: 0}
     - target: {fileID: 8388639979114973252, guid: bace132855e73470c9527eede56cf494,
         type: 3}
       propertyPath: m_PropertySheet.m_Bool.m_Array.Array.data[2].m_Name
       value: WordChange
+      objectReference: {fileID: 0}
+    - target: {fileID: 8388639979114973252, guid: bace132855e73470c9527eede56cf494,
+        type: 3}
+      propertyPath: m_PropertySheet.m_Bool.m_Array.Array.data[3].m_Name
+      value: Off
       objectReference: {fileID: 0}
     - target: {fileID: 8388639979114973252, guid: bace132855e73470c9527eede56cf494,
         type: 3}
@@ -458,6 +463,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 8388639979114973252, guid: bace132855e73470c9527eede56cf494,
         type: 3}
+      propertyPath: m_PropertySheet.m_Float.m_Array.Array.data[5].m_Name
+      value: OffTime
+      objectReference: {fileID: 0}
+    - target: {fileID: 8388639979114973252, guid: bace132855e73470c9527eede56cf494,
+        type: 3}
       propertyPath: m_PropertySheet.m_Uint.m_Array.Array.data[0].m_Value
       value: 0
       objectReference: {fileID: 0}
@@ -478,12 +488,22 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 8388639979114973252, guid: bace132855e73470c9527eede56cf494,
         type: 3}
+      propertyPath: m_PropertySheet.m_Float.m_Array.Array.data[5].m_Value
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8388639979114973252, guid: bace132855e73470c9527eede56cf494,
+        type: 3}
       propertyPath: m_PropertySheet.m_Bool.m_Array.Array.data[1].m_Overridden
       value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 8388639979114973252, guid: bace132855e73470c9527eede56cf494,
         type: 3}
       propertyPath: m_PropertySheet.m_Bool.m_Array.Array.data[2].m_Overridden
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 8388639979114973252, guid: bace132855e73470c9527eede56cf494,
+        type: 3}
+      propertyPath: m_PropertySheet.m_Bool.m_Array.Array.data[3].m_Overridden
       value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 8388639979114973252, guid: bace132855e73470c9527eede56cf494,

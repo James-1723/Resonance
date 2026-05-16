@@ -22,7 +22,7 @@ public class WindInteraction : MonoBehaviour
     private Quaternion wind1LastHeadRot;
     private Vector3 wind1LastHandPos;
 
-    public float wind1_detect_time = 3f;
+    public float wind1_detect_time = 20f;
     public float wind1_rotation_threshold = 2f;    // degrees/frame 超過就算「在轉」
     public float wind1_handmove_threshold = 0.01f;  // meters/frame 超過就算「在動」
     public float wind1_walk_threshold = 0.5f;       // head 位移總量超過就算「走了一步」
@@ -34,7 +34,7 @@ public class WindInteraction : MonoBehaviour
     private float wind2PathLength = 0f;
     private Vector3 wind2LastPos;
     private bool wind2Initialized = false;
-    public float wind2_detect_time = 10f;
+    public float wind2_detect_time = 20f;
     private bool wind2PhaseActive = false;
     private bool wind2DetectedLatch = false;
 
@@ -43,7 +43,7 @@ public class WindInteraction : MonoBehaviour
     public VisualEffect windVFX_3;
     private Vector3 wind3PhaseStartHeadPos;
     private Vector3 wind3PhaseStartForward;
-    public float wind3_detect_time = 5f;
+    public float wind3_detect_time = 20f;
     public float wind3_walk_threshold = 0.5f;
 
     [Header("UI")]
