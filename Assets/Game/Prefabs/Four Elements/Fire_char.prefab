@@ -375,8 +375,18 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 8986372277673552149, guid: 23444709eb864486e8f156f2c46019d5,
         type: 3}
+      propertyPath: m_PropertySheet.m_Bool.m_Array.Array.size
+      value: 3
+      objectReference: {fileID: 0}
+    - target: {fileID: 8986372277673552149, guid: 23444709eb864486e8f156f2c46019d5,
+        type: 3}
       propertyPath: m_PropertySheet.m_Float.m_Array.Array.size
-      value: 5
+      value: 6
+      objectReference: {fileID: 0}
+    - target: {fileID: 8986372277673552149, guid: 23444709eb864486e8f156f2c46019d5,
+        type: 3}
+      propertyPath: m_PropertySheet.m_Bool.m_Array.Array.data[2].m_Name
+      value: Off
       objectReference: {fileID: 0}
     - target: {fileID: 8986372277673552149, guid: 23444709eb864486e8f156f2c46019d5,
         type: 3}
@@ -387,6 +397,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_PropertySheet.m_Float.m_Array.Array.data[4].m_Name
       value: Time
+      objectReference: {fileID: 0}
+    - target: {fileID: 8986372277673552149, guid: 23444709eb864486e8f156f2c46019d5,
+        type: 3}
+      propertyPath: m_PropertySheet.m_Float.m_Array.Array.data[5].m_Name
+      value: OffTime
       objectReference: {fileID: 0}
     - target: {fileID: 8986372277673552149, guid: 23444709eb864486e8f156f2c46019d5,
         type: 3}
@@ -405,7 +420,17 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 8986372277673552149, guid: 23444709eb864486e8f156f2c46019d5,
         type: 3}
+      propertyPath: m_PropertySheet.m_Bool.m_Array.Array.data[2].m_Overridden
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 8986372277673552149, guid: 23444709eb864486e8f156f2c46019d5,
+        type: 3}
       propertyPath: m_PropertySheet.m_Float.m_Array.Array.data[3].m_Overridden
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 8986372277673552149, guid: 23444709eb864486e8f156f2c46019d5,
+        type: 3}
+      propertyPath: m_PropertySheet.m_Float.m_Array.Array.data[5].m_Overridden
       value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 8986372277673552149, guid: 23444709eb864486e8f156f2c46019d5,
