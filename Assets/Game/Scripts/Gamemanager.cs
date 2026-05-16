@@ -20,6 +20,8 @@ public class Gamemanager : NetworkBehaviour
 
     [Header("Four Interaction Fade out Effect")]
     public TextToPointsController[] fadeOutEffects;
+    [Tooltip("觸碰後幾秒才開始淡出（未選中文字）")]
+    public float fadeOutDelay = 1f;
 
     [Header("Four Interaction Selected Visual Effect")]
     public VisualEffect windVFX;
@@ -113,6 +115,8 @@ public class Gamemanager : NetworkBehaviour
                 audioController.PlayAudio("SoundEffect", 9);
                 break;
         }
+
+        yield return new WaitForSeconds(fadeOutDelay);
 
         for (int i = 0; i < 4; i++)
         {
