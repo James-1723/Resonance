@@ -31,6 +31,7 @@ public class WaterInteraction : ParticleControlTemplate
 
     private bool water2PhaseActive = false;
     private bool water2HeadMoveDetected = false;
+    private bool water2HeadMoveResult = false;  // 第二關偵測結果，供第三關使用
     private Vector3 water2StartHeadPos;
 
     [Header("Water 3 Detection")]
@@ -98,7 +99,13 @@ public class WaterInteraction : ParticleControlTemplate
         // 第三關
         // 初始狀態
         consoleUI.text = "第三關初始狀態，等待5秒";
+        water_1_1(false);  // 關閉第一關場景（不動 ATurnYellow/BTurnBrown）
         water_3(true);
+        // 第二關結束時 ATurnYellow/BTurnBrown 已被清除，這裡重新套回讓 3-1Controller 可以正確同步
+        if (water2HeadMoveResult)
+            water_2_B(true);  // 有移動 → 轉紅
+        else
+            water_2_A(true);  // 沒移動 → 轉黃
         yield return new WaitForSeconds(5f);
         consoleUI.text = "結束5秒間隔，水上升，開始5秒偵測3A, 3B";
         water_3_rise(true);
@@ -179,14 +186,15 @@ public class WaterInteraction : ParticleControlTemplate
     {
         if (status == "start")
         {
+            water2HeadMoveResult = water2HeadMoveDetected;  // 儲存結果供第三關同步用
             if (water2HeadMoveDetected)
             {
-                water_2_A(true);
+                water_2_B(true);  // 有移動 → 轉紅
                 gamemanager.AddCharToHistory('流');
             }
             else
             {
-                water_2_B(true);
+                water_2_A(true);  // 沒移動 → 轉黃
                 gamemanager.AddCharToHistory('容');
             }
         }
