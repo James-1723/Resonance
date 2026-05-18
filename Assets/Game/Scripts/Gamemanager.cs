@@ -29,6 +29,9 @@ public class Gamemanager : NetworkBehaviour
 
     [Header("UI")]
     public TextMesh testConnctionUI;
+    public TextMesh communicateUI;
+    public TextMesh combinedResultUI;
+    public TextMesh ngoLogUI;
 
     [Header("Player's Data")]
     public List<char> charHistorys;
@@ -41,7 +44,7 @@ public class Gamemanager : NetworkBehaviour
 
     void Start()
     {
-        charHistorys = new List<char>();
+        // charHistorys = new List<char>();
         if (audioController != null)
         {
             audioController.PlayAudio("SoundEffect", 0);
@@ -67,6 +70,15 @@ public class Gamemanager : NetworkBehaviour
     }
     void Update()
     {
+        var nm = NetworkManager.Singleton;
+        if (nm != null)
+        {
+            ngoLogUI.text =
+                $"IsHost: {nm.IsHost} | IsClient: {nm.IsClient}\n" +
+                $"IsListening: {nm.IsListening} | IsConnectedClient: {nm.IsConnectedClient}\n" +
+                $"ClientId: {nm.LocalClientId} | ConnectedClients: {nm.ConnectedClientsIds.Count}";
+        }
+
         if (Input.GetKeyDown(KeyCode.Space))
         {
             LastRound();
@@ -200,15 +212,6 @@ public class Gamemanager : NetworkBehaviour
 
     public void LastRound()
     {
-        // List<char> chars = element switch
-        // {
-        //     "Wind"  => windChars,
-        //     "Fire"  => fireChars,
-        //     "Water" => waterChars,
-        //     "Dirt"  => dirtChars,
-        //     _       => null
-        // };
-
         if (charHistorys == null || charHistorys.Count == 0) return;
 
         Vector3 basePos = player_head.transform.position
@@ -223,10 +226,6 @@ public class Gamemanager : NetworkBehaviour
             Vector3 pos = basePos + right * (i * wordsSpacing - totalWidth / 2f);
             obj.transform.position = pos;
 
-            // Transform vfxChild = obj.transform.Find("Wind_VFX");
-            // if (vfxChild != null)
-            //     vfxChild.position = pos;
-
             Transform tmpChild = obj.transform.Find("Wind_TMP");
             if (tmpChild != null)
             {
@@ -240,21 +239,6 @@ public class Gamemanager : NetworkBehaviour
     public void AddCharToHistory(char c)
     {
         charHistorys.Add(c);
-        // switch (element)
-        // {
-        //     case "Wind":
-        //         windChars.Add(c);
-        //         break;
-        //     case "Fire":
-        //         fireChars.Add(c);
-        //         break;
-        //     case "Water":
-        //         waterChars.Add(c);
-        //         break;
-        //     case "Dirt":
-        //         dirtChars.Add(c);
-        //         break;
-        // }
     }
 
     public void ShowHistory()
@@ -264,33 +248,71 @@ public class Gamemanager : NetworkBehaviour
         {
             history += charHistorys[i];
         }
-        // switch (element)
-        // {
-        //     case "Wind":
-        //         for (int i = 0; i < windChars.Count; i++)
-        //         {
-        //             history += windChars[i];
-        //         }
-        //         break;
-        //     case "Fire":
-        //         for (int i = 0; i < fireChars.Count; i++)
-        //         {
-        //             history += fireChars[i];
-        //         }
-        //         break;
-        //     case "Water":
-        //         for (int i = 0; i < waterChars.Count; i++)
-        //         {
-        //             history += waterChars[i];
-        //         }
-        //         break;
-        //     case "Dirt":
-        //         for (int i = 0; i < dirtChars.Count; i++)
-        //         {
-        //             history += dirtChars[i];
-        //         }
-        //         break;
-        // }
         Debug.Log(history);
+    }
+
+    // ==========================================
+    // 多人連線資料交換邏輯 (Data Exchange)
+    // ==========================================
+
+    /// <summary>
+    /// 準備將自己的資料發送給 Host。
+    /// 可以綁定在某個 UI 按鈕上，或是融合階段開始時呼叫。
+    /// </summary>
+    public void SendHistoryToHost()
+    {
+        // 1. 將 List<char> 轉換為 string，以便透過 RPC 進行網路傳輸
+        string myHistoryData = new string(charHistorys.ToArray());
+
+        if (IsClient && !IsHost)
+        {
+            // 如果自己是單純的 ClientB，就發送 ServerRpc 給 Host
+            myHistoryData = "test";
+            communicateUI.text = "Client 準備發送資料給 Host...";
+            Debug.Log("Client 準備發送資料給 Host...");
+            SubmitHistoryServerRpc(myHistoryData, NetworkManager.Singleton.LocalClientId);
+        }
+        else if (IsHost)
+        {
+            // 如果自己本身就是 HostA，不需要發送 RPC 給自己
+            // 可以直接將自己的資料準備好，等待 Client 的資料傳來
+            communicateUI.text = "Host 本身的資料已就緒: " + myHistoryData + "，等待 Client 傳送...";
+            Debug.Log($"Host 本身的資料已就緒: {myHistoryData}，等待 Client 傳送...");
+            
+            // TODO: 你可以在這裡設定一個 bool 值 (例如 isHostReady = true)，
+            // 用來判斷雙方是否都準備好進行融合
+        }
+    }
+
+    /// <summary>
+    /// ServerRpc: 這是 Client 請求 Host (Server) 執行的函式。
+    /// RequireOwnership = false 確保即使這個 GameManager 不是該 Client 生成的，Client 也能呼叫此方法。
+    /// </summary>
+    /// <param name="clientData">Client 傳遞過來的字串資料</param>
+    /// <param name="clientId">發送此請求的 Client ID，方便 Host 辨識是誰傳來的</param>
+    [ServerRpc(RequireOwnership = false)]
+    public void SubmitHistoryServerRpc(string clientData, ulong clientId)
+    {
+        // ==========================================
+        // 以下區域的程式碼，保證只會在 Host/Server 端執行
+        // ==========================================
+        
+        Debug.Log($"Host 成功接收到來自 Client (ID: {clientId}) 的資料: {clientData}");
+
+        // 2. 將接收到的字串轉回 List<char>，方便你後續的邏輯操作
+        // List<char> clientHistoryList = new List<char>(clientData.ToCharArray());
+
+        // 3. 在這個時間點，Host 已經同時擁有了兩邊的資訊：
+        //    - Host 自己的資料： this.charHistorys
+        //    - Client 的資料： clientHistoryList
+        string combineData = string.Join("", this.charHistorys.ToArray()) + clientData;
+        Debug.Log("融合結果: " + combineData);
+        BroadcastCombinedResultClientRpc(combineData);
+    }
+
+    [ClientRpc]
+    private void BroadcastCombinedResultClientRpc(string combineData)
+    {
+        combinedResultUI.text = "融合結果: " + combineData;
     }
 }

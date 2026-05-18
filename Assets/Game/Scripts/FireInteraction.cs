@@ -7,6 +7,7 @@ public class FireInteraction : ParticleControlTemplate
     [Header("Initial Setting")]
     public GameObject initialFire;
     public GameObject firePath;
+    public GameObject fireIndicator;
     public float firePath_speed = 1f;
     public GameObject torch;
     public GameObject torchFire;
@@ -24,23 +25,28 @@ public class FireInteraction : ParticleControlTemplate
 
     IEnumerator GameFlow()
     {
+        Debug.Log("InitialFire is on");
         fire_1(true);
         yield return new WaitForSeconds(3);
+        Debug.Log("firePath is on");
+        firePath.SetActive(true);
+        fireIndicator.SetActive(true);
+        fireIndicator.transform.position = initialFire.transform.position;
         yield return StartCoroutine(MoveFirePath(firstFirePositions[0].transform.position));
         fire_1_1(true);
     }
 
     private IEnumerator MoveFirePath(Vector3 target)
     {
-        firePath.SetActive(true);
-        while (Vector3.Distance(firePath.transform.position, target) > 0.01f)
+        Debug.Log("start to move");
+        while (Vector3.Distance(fireIndicator.transform.position, target) > 0.01f)
         {
-            firePath.transform.position = Vector3.MoveTowards(
-                firePath.transform.position, target, firePath_speed * Time.deltaTime);
+            fireIndicator.transform.position = Vector3.MoveTowards(
+                fireIndicator.transform.position, target, firePath_speed * Time.deltaTime);
             yield return null;
         }
-        firePath.transform.position = target;
-        firePath.SetActive(false);
+        fireIndicator.transform.position = target;
+        // firePath.SetActive(false);
     }
 
     private void fire_1(bool control) => PrefabControl("Fire", initialFire, control, 0);
@@ -50,7 +56,7 @@ public class FireInteraction : ParticleControlTemplate
         {
             if (!firePosHasUsed[i])
             {
-                Instantiate(torchFire, firstFirePositions[i].transform.position, firstFirePositions[i].transform.rotation);
+                Instantiate(initialFire, firstFirePositions[i].transform.position, firstFirePositions[i].transform.rotation);
                 firePosHasUsed[i] = true;
                 break;
             }

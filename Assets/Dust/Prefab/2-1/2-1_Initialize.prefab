@@ -191,8 +191,8 @@ LineRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_Positions:
-  - {x: -0.09705028, y: 0.263715, z: 4.593718}
-  - {x: -0.09705028, y: 0.263715, z: 304.59372}
+  - {x: -0.102, y: 0.2, z: 4.852}
+  - {x: -0.102, y: 0.2, z: 20.751999}
   m_Parameters:
     serializedVersion: 3
     widthMultiplier: 1
@@ -222,11 +222,11 @@ LineRenderer:
       m_RotationOrder: 4
     colorGradient:
       serializedVersion: 2
-      key0: {r: 0, g: 0, b: 0, a: 0}
-      key1: {r: 0, g: 0, b: 0, a: 1}
+      key0: {r: 0.4, g: 0.2, b: 0.050980393, a: 1}
+      key1: {r: 0.4, g: 0.2, b: 0.050980393, a: 1}
       key2: {r: 0, g: 0, b: 0, a: 0.9264706}
       key3: {r: 0, g: 0, b: 0, a: 1}
-      key4: {r: 0, g: 0, b: 0, a: 0}
+      key4: {r: 0, g: 0, b: 0, a: 1}
       key5: {r: 0, g: 0, b: 0, a: 0}
       key6: {r: 0, g: 0, b: 0, a: 0}
       key7: {r: 0, g: 0, b: 0, a: 0}
@@ -275,7 +275,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   lineLength: 300
   animationDuration: 5000
-  testProgress: 0
+  testProgress: 0.061
   lineWidth: 0.1
   normalColor: {r: 0.4, g: 0.2, b: 0.05, a: 1}
   litColor: {r: 0.5294118, g: 0.3276471, b: 0.28235295, a: 1}

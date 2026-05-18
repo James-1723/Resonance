@@ -18652,7 +18652,7 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1451217726}
-  m_Enabled: 0
+  m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 9a116bae24b4c4e51a5a1814df16196b, type: 3}
   m_Name: 
@@ -18689,7 +18689,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   player_head: {fileID: 1586380740}
   player_hand: {fileID: 0}
-  gamemanager: {fileID: 0}
+  gamemanager: {fileID: 1451217728}
   audioController: {fileID: 0}
   consoleUI: {fileID: 0}
   consoleUI_1_1: {fileID: 0}
@@ -18701,7 +18701,8 @@ MonoBehaviour:
     type: 3}
   firePath_speed: 1
   torch: {fileID: 1010903120053572556, guid: f9d621e590918ea4a84d084e50d09fe5, type: 3}
-  torchFire: {fileID: 0}
+  torchFire: {fileID: 919132149155446097, guid: 5d1b16c9db8fa474faa26113593c8b21,
+    type: 3}
   firstFirePositions:
   - {fileID: 1842832769}
   - {fileID: 1980393255}
