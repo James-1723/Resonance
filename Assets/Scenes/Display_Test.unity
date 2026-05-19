@@ -3167,7 +3167,7 @@ PrefabInstance:
     - target: {fileID: 5700447101541597629, guid: f637d91c93e95414696e4fe793d4a671,
         type: 3}
       propertyPath: m_PropertySheet.m_Float.m_Array.Array.size
-      value: 6
+      value: 7
       objectReference: {fileID: 0}
     - target: {fileID: 5700447101541597629, guid: f637d91c93e95414696e4fe793d4a671,
         type: 3}
@@ -3193,6 +3193,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_PropertySheet.m_Float.m_Array.Array.data[5].m_Name
       value: Drag
+      objectReference: {fileID: 0}
+    - target: {fileID: 5700447101541597629, guid: f637d91c93e95414696e4fe793d4a671,
+        type: 3}
+      propertyPath: m_PropertySheet.m_Float.m_Array.Array.data[6].m_Name
+      value: OffTime
       objectReference: {fileID: 0}
     - target: {fileID: 5700447101541597629, guid: f637d91c93e95414696e4fe793d4a671,
         type: 3}
@@ -3242,6 +3247,11 @@ PrefabInstance:
     - target: {fileID: 5700447101541597629, guid: f637d91c93e95414696e4fe793d4a671,
         type: 3}
       propertyPath: m_PropertySheet.m_Float.m_Array.Array.data[5].m_Overridden
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 5700447101541597629, guid: f637d91c93e95414696e4fe793d4a671,
+        type: 3}
+      propertyPath: m_PropertySheet.m_Float.m_Array.Array.data[6].m_Overridden
       value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 5700447101541597629, guid: f637d91c93e95414696e4fe793d4a671,
@@ -3857,8 +3867,10 @@ MonoBehaviour:
   ipAddress: 2.0.0.88
   port: 8010
   oscAddress: wind_fire
+  oscAddress2: wind_water
   sendValue: 0.8
-  isVisible: 0
+  isVisibleA: 1
+  isVisibleB: 1
 --- !u!1 &247511007
 GameObject:
   m_ObjectHideFlags: 0
@@ -4049,7 +4061,7 @@ PrefabInstance:
     - target: {fileID: 8695937947693368681, guid: 2d65d4a190168a841ad006f208c8fb09,
         type: 3}
       propertyPath: m_PropertySheet.m_Float.m_Array.Array.size
-      value: 7
+      value: 8
       objectReference: {fileID: 0}
     - target: {fileID: 8695937947693368681, guid: 2d65d4a190168a841ad006f208c8fb09,
         type: 3}
@@ -4070,6 +4082,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_PropertySheet.m_Float.m_Array.Array.data[6].m_Name
       value: Drag
+      objectReference: {fileID: 0}
+    - target: {fileID: 8695937947693368681, guid: 2d65d4a190168a841ad006f208c8fb09,
+        type: 3}
+      propertyPath: m_PropertySheet.m_Float.m_Array.Array.data[7].m_Name
+      value: OffTime
       objectReference: {fileID: 0}
     - target: {fileID: 8695937947693368681, guid: 2d65d4a190168a841ad006f208c8fb09,
         type: 3}
@@ -4129,6 +4146,11 @@ PrefabInstance:
     - target: {fileID: 8695937947693368681, guid: 2d65d4a190168a841ad006f208c8fb09,
         type: 3}
       propertyPath: m_PropertySheet.m_Float.m_Array.Array.data[6].m_Overridden
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 8695937947693368681, guid: 2d65d4a190168a841ad006f208c8fb09,
+        type: 3}
+      propertyPath: m_PropertySheet.m_Float.m_Array.Array.data[7].m_Overridden
       value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 8695937947693368681, guid: 2d65d4a190168a841ad006f208c8fb09,
@@ -8915,7 +8937,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!65 &632812100
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -9034,6 +9056,10 @@ MonoBehaviour:
   waterVFX: {fileID: 33178547}
   dirtVFX: {fileID: 1917874476}
   testConnctionUI: {fileID: 2089230613}
+  communicateUI: {fileID: 0}
+  combinedResultUI: {fileID: 0}
+  ngoLogUI: {fileID: 0}
+  apiClient: {fileID: 0}
   charHistorys: 
   textVFX_prefab: {fileID: 3856144214786027640, guid: 8c2d12d9566333b4cb41557d48fc8def,
     type: 3}
@@ -23030,7 +23056,7 @@ PrefabInstance:
     - target: {fileID: 6049654274446932942, guid: b6b4b3d4e46223a4bbf054fc18da9b5c,
         type: 3}
       propertyPath: m_PropertySheet.m_Float.m_Array.Array.size
-      value: 8
+      value: 9
       objectReference: {fileID: 0}
     - target: {fileID: 6049654274446932942, guid: b6b4b3d4e46223a4bbf054fc18da9b5c,
         type: 3}
@@ -23061,6 +23087,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_PropertySheet.m_Float.m_Array.Array.data[7].m_Name
       value: Drag
+      objectReference: {fileID: 0}
+    - target: {fileID: 6049654274446932942, guid: b6b4b3d4e46223a4bbf054fc18da9b5c,
+        type: 3}
+      propertyPath: m_PropertySheet.m_Float.m_Array.Array.data[8].m_Name
+      value: OffTime
       objectReference: {fileID: 0}
     - target: {fileID: 6049654274446932942, guid: b6b4b3d4e46223a4bbf054fc18da9b5c,
         type: 3}
@@ -23125,6 +23156,11 @@ PrefabInstance:
     - target: {fileID: 6049654274446932942, guid: b6b4b3d4e46223a4bbf054fc18da9b5c,
         type: 3}
       propertyPath: m_PropertySheet.m_Float.m_Array.Array.data[7].m_Overridden
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 6049654274446932942, guid: b6b4b3d4e46223a4bbf054fc18da9b5c,
+        type: 3}
+      propertyPath: m_PropertySheet.m_Float.m_Array.Array.data[8].m_Overridden
       value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 6049654274446932942, guid: b6b4b3d4e46223a4bbf054fc18da9b5c,
@@ -23449,7 +23485,7 @@ PrefabInstance:
     - target: {fileID: 3584482898624301371, guid: 0beb7198891590844951f49a00122767,
         type: 3}
       propertyPath: m_PropertySheet.m_Float.m_Array.Array.size
-      value: 6
+      value: 7
       objectReference: {fileID: 0}
     - target: {fileID: 3584482898624301371, guid: 0beb7198891590844951f49a00122767,
         type: 3}
@@ -23470,6 +23506,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_PropertySheet.m_Float.m_Array.Array.data[5].m_Name
       value: Intensity
+      objectReference: {fileID: 0}
+    - target: {fileID: 3584482898624301371, guid: 0beb7198891590844951f49a00122767,
+        type: 3}
+      propertyPath: m_PropertySheet.m_Float.m_Array.Array.data[6].m_Name
+      value: OffTime
       objectReference: {fileID: 0}
     - target: {fileID: 3584482898624301371, guid: 0beb7198891590844951f49a00122767,
         type: 3}
@@ -23519,6 +23560,11 @@ PrefabInstance:
     - target: {fileID: 3584482898624301371, guid: 0beb7198891590844951f49a00122767,
         type: 3}
       propertyPath: m_PropertySheet.m_Float.m_Array.Array.data[5].m_Overridden
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 3584482898624301371, guid: 0beb7198891590844951f49a00122767,
+        type: 3}
+      propertyPath: m_PropertySheet.m_Float.m_Array.Array.data[6].m_Overridden
       value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 3584482898624301371, guid: 0beb7198891590844951f49a00122767,

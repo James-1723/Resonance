@@ -287,10 +287,9 @@ public class Gamemanager : NetworkBehaviour
     public void SendHistoryToHost()
     {
         string myHistoryData = new string(charHistorys.ToArray());
-
         if (IsClient && !IsHost)
         {
-            myHistoryData = "test"; // TODO: 移除測試用資料
+            myHistoryData = "客戶端"; // TODO: 移除測試用資料
             communicateUI.text = "Client 準備發送資料給 Host...";
             Debug.Log("Client 準備發送資料給 Host...");
             SubmitHistoryServerRpc(myHistoryData, NetworkManager.Singleton.LocalClientId);
@@ -317,27 +316,60 @@ public class Gamemanager : NetworkBehaviour
 
         if (apiClient != null)
         {
-            // 送給 PC Server 處理，等回傳後再 Broadcast
             apiClient.RequestFusion(hostData, clientData, (responseJson) =>
             {
                 FusionResponseData resData = JsonUtility.FromJson<FusionResponseData>(responseJson);
                 if (resData != null && resData.success)
                 {
                     Debug.Log($"[Phase2] Server 回傳融合結果: {resData.fusionResult}");
-                    BroadcastCombinedResultClientRpc(resData.fusionResult);
+                    SpawnFusionResult(resData.fusionResult);
                 }
                 else
                 {
                     Debug.LogWarning("[Phase2] Server 回傳失敗或格式有誤，使用本地合併作為備援。");
-                    BroadcastCombinedResultClientRpc(hostData + clientData);
+                    SpawnFusionResult(hostData + clientData);
                 }
             });
         }
         else
         {
-            // APIClient 未設定，直接本地合併
             Debug.LogWarning("[Phase2] APIClient 未設定，直接本地合併。");
-            BroadcastCombinedResultClientRpc(hostData + clientData);
+            SpawnFusionResult(hostData + clientData);
+        }
+    }
+
+    private void SpawnFusionResult(string fusionResult)
+    {
+        BroadcastCombinedResultClientRpc(fusionResult);
+
+        Vector3 basePos = new Vector3(0, 2, 0);
+        float totalWidth = (fusionResult.Length - 1) * wordsSpacing;
+
+        for (int i = 0; i < fusionResult.Length; i++)
+        {
+            GameObject obj = Instantiate(textVFX_prefab);
+            obj.transform.position = basePos + Vector3.right * (i * wordsSpacing - totalWidth / 2f);
+
+            NetworkObject netObj = obj.GetComponent<NetworkObject>();
+            if (netObj != null)
+            {
+                netObj.Spawn();
+                SetFusionCharClientRpc(netObj.NetworkObjectId, fusionResult[i].ToString());
+            }
+        }
+    }
+
+    [ClientRpc]
+    private void SetFusionCharClientRpc(ulong networkObjectId, string charText)
+    {
+        if (NetworkManager.Singleton.SpawnManager.SpawnedObjects.TryGetValue(networkObjectId, out NetworkObject netObj))
+        {
+            Transform tmpChild = netObj.transform.Find("Wind_TMP");
+            if (tmpChild != null)
+            {
+                TMP_Text tmp = tmpChild.GetComponent<TMP_Text>();
+                if (tmp != null) tmp.text = charText;
+            }
         }
     }
 

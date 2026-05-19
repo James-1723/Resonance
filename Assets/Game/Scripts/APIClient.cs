@@ -5,7 +5,7 @@ using UnityEngine.Networking;
 
 public class APIClient : MonoBehaviour
 {
-    public string serverIP = "192.168.1.4";
+    public string serverIP = "192.168.1.4"; // 172.20.10.2
     public string serverPort = "8080";
 
     public void RequestPhase1(string playerId, string data)

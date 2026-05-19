@@ -25235,7 +25235,7 @@ PrefabInstance:
     - target: {fileID: 1259405991361454701, guid: 0beb7198891590844951f49a00122767,
         type: 3}
       propertyPath: m_IsActive
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 2150320881470714793, guid: 0beb7198891590844951f49a00122767,
         type: 3}
@@ -25330,7 +25330,7 @@ PrefabInstance:
     - target: {fileID: 3584482898624301371, guid: 0beb7198891590844951f49a00122767,
         type: 3}
       propertyPath: m_PropertySheet.m_Uint.m_Array.Array.data[0].m_Value
-      value: 0
+      value: 2500
       objectReference: {fileID: 0}
     - target: {fileID: 3584482898624301371, guid: 0beb7198891590844951f49a00122767,
         type: 3}
@@ -25490,7 +25490,7 @@ PrefabInstance:
     - target: {fileID: 3813647633984048460, guid: 0beb7198891590844951f49a00122767,
         type: 3}
       propertyPath: m_Enabled
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 4535968104595472316, guid: 0beb7198891590844951f49a00122767,
         type: 3}
@@ -25626,6 +25626,10 @@ PrefabInstance:
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
     m_AddedComponents:
+    - targetCorrespondingSourceObject: {fileID: 8378173851463792159, guid: 0beb7198891590844951f49a00122767,
+        type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 0}
     - targetCorrespondingSourceObject: {fileID: 2453552227871601678, guid: 0beb7198891590844951f49a00122767,
         type: 3}
       insertIndex: -1
@@ -30033,7 +30037,7 @@ MonoBehaviour:
   combinedResultUI: {fileID: 992406067}
   ngoLogUI: {fileID: 323084330}
   apiClient: {fileID: 1816612158}
-  charHistorys: 410042004300
+  charHistorys: 8d870854864e
   textVFX_prefab: {fileID: 3856144214786027640, guid: 8c2d12d9566333b4cb41557d48fc8def,
     type: 3}
   player_head: {fileID: 0}
@@ -30240,7 +30244,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3975772d91a6f4295a9f0c60ac96367d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  serverIP: 192.168.1.4
+  serverIP: 172.20.10.2
   serverPort: 8080
 --- !u!1 &1817061170
 GameObject:
