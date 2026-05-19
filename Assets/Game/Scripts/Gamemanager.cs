@@ -33,6 +33,9 @@ public class Gamemanager : NetworkBehaviour
     public TextMesh combinedResultUI;
     public TextMesh ngoLogUI;
 
+    [Header("API")]
+    public APIClient apiClient;
+
     [Header("Player's Data")]
     public List<char> charHistorys;
 
@@ -81,7 +84,8 @@ public class Gamemanager : NetworkBehaviour
 
         if (Input.GetKeyDown(KeyCode.Space))
         {
-            LastRound();
+            // LastRound();
+            SendPhase1DataToServer();
         }
 
         if (Input.GetKeyDown(KeyCode.W))
@@ -259,28 +263,42 @@ public class Gamemanager : NetworkBehaviour
     /// 準備將自己的資料發送給 Host。
     /// 可以綁定在某個 UI 按鈕上，或是融合階段開始時呼叫。
     /// </summary>
+    /// <summary>
+    /// 第一階段：各自獨立將自己的字串送給 PC Server，不需要等對方。
+    /// </summary>
+    public void SendPhase1DataToServer()
+    {
+        if (apiClient == null)
+        {
+            Debug.LogWarning("[Phase1] APIClient 未設定，無法發送。");
+            return;
+        }
+
+        string myData = new string(charHistorys.ToArray());
+        string role = IsHost ? "host" : "client";
+
+        Debug.Log($"[Phase1] 發送自己的資料給 Server，role={role}, data={myData}");
+        apiClient.RequestPhase1(role, myData);
+    }
+
+    /// <summary>
+    /// 第二階段：Client 把資料送給 Host，Host 彙整後送 PC Server，拿到結果再 Broadcast。
+    /// </summary>
     public void SendHistoryToHost()
     {
-        // 1. 將 List<char> 轉換為 string，以便透過 RPC 進行網路傳輸
         string myHistoryData = new string(charHistorys.ToArray());
 
         if (IsClient && !IsHost)
         {
-            // 如果自己是單純的 ClientB，就發送 ServerRpc 給 Host
-            myHistoryData = "test";
+            myHistoryData = "test"; // TODO: 移除測試用資料
             communicateUI.text = "Client 準備發送資料給 Host...";
             Debug.Log("Client 準備發送資料給 Host...");
             SubmitHistoryServerRpc(myHistoryData, NetworkManager.Singleton.LocalClientId);
         }
         else if (IsHost)
         {
-            // 如果自己本身就是 HostA，不需要發送 RPC 給自己
-            // 可以直接將自己的資料準備好，等待 Client 的資料傳來
             communicateUI.text = "Host 本身的資料已就緒: " + myHistoryData + "，等待 Client 傳送...";
             Debug.Log($"Host 本身的資料已就緒: {myHistoryData}，等待 Client 傳送...");
-            
-            // TODO: 你可以在這裡設定一個 bool 值 (例如 isHostReady = true)，
-            // 用來判斷雙方是否都準備好進行融合
         }
     }
 
@@ -293,21 +311,34 @@ public class Gamemanager : NetworkBehaviour
     [ServerRpc(RequireOwnership = false)]
     public void SubmitHistoryServerRpc(string clientData, ulong clientId)
     {
-        // ==========================================
-        // 以下區域的程式碼，保證只會在 Host/Server 端執行
-        // ==========================================
-        
         Debug.Log($"Host 成功接收到來自 Client (ID: {clientId}) 的資料: {clientData}");
 
-        // 2. 將接收到的字串轉回 List<char>，方便你後續的邏輯操作
-        // List<char> clientHistoryList = new List<char>(clientData.ToCharArray());
+        string hostData = string.Join("", this.charHistorys.ToArray());
 
-        // 3. 在這個時間點，Host 已經同時擁有了兩邊的資訊：
-        //    - Host 自己的資料： this.charHistorys
-        //    - Client 的資料： clientHistoryList
-        string combineData = string.Join("", this.charHistorys.ToArray()) + clientData;
-        Debug.Log("融合結果: " + combineData);
-        BroadcastCombinedResultClientRpc(combineData);
+        if (apiClient != null)
+        {
+            // 送給 PC Server 處理，等回傳後再 Broadcast
+            apiClient.RequestFusion(hostData, clientData, (responseJson) =>
+            {
+                FusionResponseData resData = JsonUtility.FromJson<FusionResponseData>(responseJson);
+                if (resData != null && resData.success)
+                {
+                    Debug.Log($"[Phase2] Server 回傳融合結果: {resData.fusionResult}");
+                    BroadcastCombinedResultClientRpc(resData.fusionResult);
+                }
+                else
+                {
+                    Debug.LogWarning("[Phase2] Server 回傳失敗或格式有誤，使用本地合併作為備援。");
+                    BroadcastCombinedResultClientRpc(hostData + clientData);
+                }
+            });
+        }
+        else
+        {
+            // APIClient 未設定，直接本地合併
+            Debug.LogWarning("[Phase2] APIClient 未設定，直接本地合併。");
+            BroadcastCombinedResultClientRpc(hostData + clientData);
+        }
     }
 
     [ClientRpc]

@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 0}
-  m_IndirectSpecularColor: {r: 0.001485971, g: 0.0013902775, b: 0.0013209902, a: 1}
+  m_IndirectSpecularColor: {r: 0.0014870899, g: 0.001374646, b: 0.001344107, a: 1}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
@@ -10162,6 +10162,7 @@ MonoBehaviour:
   communicateUI: {fileID: 0}
   combinedResultUI: {fileID: 0}
   ngoLogUI: {fileID: 0}
+  apiClient: {fileID: 0}
   charHistorys: 
   textVFX_prefab: {fileID: 3856144214786027640, guid: 8c2d12d9566333b4cb41557d48fc8def,
     type: 3}
@@ -25625,10 +25626,6 @@ PrefabInstance:
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
     m_AddedComponents:
-    - targetCorrespondingSourceObject: {fileID: 8378173851463792159, guid: 0beb7198891590844951f49a00122767,
-        type: 3}
-      insertIndex: -1
-      addedObject: {fileID: 0}
     - targetCorrespondingSourceObject: {fileID: 2453552227871601678, guid: 0beb7198891590844951f49a00122767,
         type: 3}
       insertIndex: -1
@@ -29965,6 +29962,7 @@ GameObject:
   - component: {fileID: 1816612156}
   - component: {fileID: 1816612155}
   - component: {fileID: 1816612154}
+  - component: {fileID: 1816612158}
   m_Layer: 0
   m_Name: Game Controller
   m_TagString: Player
@@ -30034,6 +30032,7 @@ MonoBehaviour:
   communicateUI: {fileID: 337736520}
   combinedResultUI: {fileID: 992406067}
   ngoLogUI: {fileID: 323084330}
+  apiClient: {fileID: 1816612158}
   charHistorys: 410042004300
   textVFX_prefab: {fileID: 3856144214786027640, guid: 8c2d12d9566333b4cb41557d48fc8def,
     type: 3}
@@ -30229,6 +30228,20 @@ MonoBehaviour:
       _value: '{}'
     - _memberName: installMatchmaking
       _value: '{"value__":0}'
+--- !u!114 &1816612158
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1816612146}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3975772d91a6f4295a9f0c60ac96367d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  serverIP: 192.168.1.4
+  serverPort: 8080
 --- !u!1 &1817061170
 GameObject:
   m_ObjectHideFlags: 0
