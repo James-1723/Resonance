@@ -44,6 +44,8 @@ public class Gamemanager : NetworkBehaviour
     public float wordsForwardDist = 1f;
     public float wordsVerticalOffset = -0.5f;
     public float wordsSpacing = 0.5f;
+    public GameObject[] hostChars;
+    public GameObject[] clientChars;
 
     void Start()
     {
@@ -274,7 +276,7 @@ public class Gamemanager : NetworkBehaviour
             return;
         }
 
-        string myData = new string(charHistorys.ToArray());
+        string myData = IsHost ? "wind" : "water";
         string role = IsHost ? "host" : "client";
 
         Debug.Log($"[Phase1] 發送自己的資料給 Server，role={role}, data={myData}");
@@ -282,35 +284,93 @@ public class Gamemanager : NetworkBehaviour
     }
 
     /// <summary>
-    /// 第二階段：Client 把資料送給 Host，Host 彙整後送 PC Server，拿到結果再 Broadcast。
+    /// 第二階段 (步驟 1)：Client 把自己的資料送給 Host，Host 收到後將雙方的前三個字顯示在畫面上。
     /// </summary>
-    public void SendHistoryToHost()
+    public void SyncHistoryDataToHost()
     {
         string myHistoryData = new string(charHistorys.ToArray());
         if (IsClient && !IsHost)
         {
-            myHistoryData = "客戶端"; // TODO: 移除測試用資料
-            communicateUI.text = "Client 準備發送資料給 Host...";
-            Debug.Log("Client 準備發送資料給 Host...");
-            SubmitHistoryServerRpc(myHistoryData, NetworkManager.Singleton.LocalClientId);
+            myHistoryData = "EFG"; // TODO: 移除測試用資料
+            communicateUI.text = "Client 準備發送資料給 Host 作為顯示...";
+            Debug.Log("Client 準備發送資料給 Host 作為顯示...");
+            SyncHistoryServerRpc(myHistoryData);
         }
         else if (IsHost)
         {
-            communicateUI.text = "Host 本身的資料已就緒: " + myHistoryData + "，等待 Client 傳送...";
-            Debug.Log($"Host 本身的資料已就緒: {myHistoryData}，等待 Client 傳送...");
+            communicateUI.text = "Host 本身的資料已就緒: " + myHistoryData + "，等待 Client 傳送以顯示...";
+            Debug.Log($"Host 本身的資料已就緒: {myHistoryData}，等待 Client 傳送以顯示...");
+        }
+    }
+
+    [ServerRpc(RequireOwnership = false)]
+    public void SyncHistoryServerRpc(string clientData)
+    {
+        string hostData = string.Join("", this.charHistorys.ToArray());
+        UpdateHistoryDisplayClientRpc(hostData, clientData);
+    }
+
+    [ClientRpc]
+    public void UpdateHistoryDisplayClientRpc(string hostData, string clientData)
+    {
+        // 顯示雙方前三個字 (共六個字)，觸發各自的 Touch VFX
+        for(int i = 0; i < 3; i++) 
+        {
+            if (i < hostData.Length && i < hostChars.Length) 
+            {
+                SetTouchVFX(hostChars[i]);
+                SetTextVFX(hostChars[i], hostData[i].ToString());
+            }
+            if (i < clientData.Length && i < clientChars.Length) 
+            {
+                SetTouchVFX(clientChars[i]);
+                SetTextVFX(clientChars[i], clientData[i].ToString());
+            }
+        }
+    }
+
+    private void SetTouchVFX(GameObject obj)
+    {
+        if (obj == null) return;
+        VisualEffect vfx = obj.GetComponentInChildren<VisualEffect>(true);
+        if (vfx != null) vfx.SetBool("Touch", true);
+    }
+
+    private void SetTextVFX(GameObject obj, string text)
+    {
+        if (obj == null) return;
+        Transform tmpChild = obj.transform.Find("Wind_TMP");
+        if (tmpChild != null)
+        {
+            TMP_Text tmp = tmpChild.GetComponent<TMP_Text>();
+            if (tmp != null) tmp.text = text;
         }
     }
 
     /// <summary>
-    /// ServerRpc: 這是 Client 請求 Host (Server) 執行的函式。
-    /// RequireOwnership = false 確保即使這個 GameManager 不是該 Client 生成的，Client 也能呼叫此方法。
+    /// 第二階段 (步驟 2)：Client 將自己的資料送給 Host，再由 Host 送去 Server，取得回傳的融合字後顯示在第四個位置。
     /// </summary>
-    /// <param name="clientData">Client 傳遞過來的字串資料</param>
-    /// <param name="clientId">發送此請求的 Client ID，方便 Host 辨識是誰傳來的</param>
-    [ServerRpc(RequireOwnership = false)]
-    public void SubmitHistoryServerRpc(string clientData, ulong clientId)
+    public void RequestFusionDataToHost()
     {
-        Debug.Log($"Host 成功接收到來自 Client (ID: {clientId}) 的資料: {clientData}");
+        string myHistoryData = new string(charHistorys.ToArray());
+        if (IsClient && !IsHost)
+        {
+            myHistoryData = "EFG"; // TODO: 移除測試用資料
+            communicateUI.text = "Client 準備發送資料給 Host 以進行融合...";
+            Debug.Log("Client 準備發送資料給 Host 以進行融合...");
+            RequestFusionServerRpc(myHistoryData, NetworkManager.Singleton.LocalClientId);
+        }
+        else if (IsHost)
+        {
+            communicateUI.text = "Host 準備與 Client 資料融合: " + myHistoryData + "，等待 Client 傳送...";
+            Debug.Log($"Host 準備與 Client 資料融合: {myHistoryData}，等待 Client 傳送...");
+        }
+    }
+
+    [ServerRpc(RequireOwnership = false)]
+    public void RequestFusionServerRpc(string clientData, ulong clientId)
+    {
+        Debug.Log($"Host 成功接收到來自 Client (ID: {clientId}) 的資料: {clientData}，準備請求融合");
 
         string hostData = string.Join("", this.charHistorys.ToArray());
 
@@ -322,60 +382,42 @@ public class Gamemanager : NetworkBehaviour
                 if (resData != null && resData.success)
                 {
                     Debug.Log($"[Phase2] Server 回傳融合結果: {resData.fusionResult}");
-                    SpawnFusionResult(resData.fusionResult);
+                    ApplyFusionResultClientRpc(resData.fusionResult);
                 }
                 else
                 {
-                    Debug.LogWarning("[Phase2] Server 回傳失敗或格式有誤，使用本地合併作為備援。");
-                    SpawnFusionResult(hostData + clientData);
+                    Debug.LogWarning("[Phase2] Server 回傳失敗或格式有誤，使用備援字。");
+                    ApplyFusionResultClientRpc("X"); // fallback
                 }
             });
         }
         else
         {
-            Debug.LogWarning("[Phase2] APIClient 未設定，直接本地合併。");
-            SpawnFusionResult(hostData + clientData);
-        }
-    }
-
-    private void SpawnFusionResult(string fusionResult)
-    {
-        BroadcastCombinedResultClientRpc(fusionResult);
-
-        Vector3 basePos = new Vector3(0, 2, 0);
-        float totalWidth = (fusionResult.Length - 1) * wordsSpacing;
-
-        for (int i = 0; i < fusionResult.Length; i++)
-        {
-            GameObject obj = Instantiate(textVFX_prefab);
-            obj.transform.position = basePos + Vector3.right * (i * wordsSpacing - totalWidth / 2f);
-
-            NetworkObject netObj = obj.GetComponent<NetworkObject>();
-            if (netObj != null)
-            {
-                netObj.Spawn();
-                SetFusionCharClientRpc(netObj.NetworkObjectId, fusionResult[i].ToString());
-            }
+            Debug.LogWarning("[Phase2] APIClient 未設定，直接使用備援字。");
+            ApplyFusionResultClientRpc("X");
         }
     }
 
     [ClientRpc]
-    private void SetFusionCharClientRpc(ulong networkObjectId, string charText)
+    public void ApplyFusionResultClientRpc(string fusionResult)
     {
-        if (NetworkManager.Singleton.SpawnManager.SpawnedObjects.TryGetValue(networkObjectId, out NetworkObject netObj))
-        {
-            Transform tmpChild = netObj.transform.Find("Wind_TMP");
-            if (tmpChild != null)
-            {
-                TMP_Text tmp = tmpChild.GetComponent<TMP_Text>();
-                if (tmp != null) tmp.text = charText;
-            }
-        }
-    }
+        string res = string.IsNullOrEmpty(fusionResult) ? "X" : fusionResult;
+        char fChar = res[0]; // 拿回傳的那一個字
 
-    [ClientRpc]
-    private void BroadcastCombinedResultClientRpc(string combineData)
-    {
-        combinedResultUI.text = "融合結果: " + combineData;
+        if (hostChars.Length > 3)
+        {
+            SetTouchVFX(hostChars[3]);
+            SetTextVFX(hostChars[3], fChar.ToString());
+        }
+        if (clientChars.Length > 3)
+        {
+            SetTouchVFX(clientChars[3]);
+            SetTextVFX(clientChars[3], fChar.ToString());
+        }
+
+        if (combinedResultUI != null)
+        {
+            combinedResultUI.text = "融合結果: " + res;
+        }
     }
 }
