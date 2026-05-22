@@ -18,7 +18,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &2356720516030768430
 Transform:
   m_ObjectHideFlags: 0
@@ -52,16 +52,16 @@ VisualEffect:
   m_PropertySheet:
     m_Float:
       m_Array:
-      - m_Value: 2000
+      - m_Value: 10000
         m_Name: Number
         m_Overridden: 1
-      - m_Value: 0.01
+      - m_Value: 0.03
         m_Name: Size
         m_Overridden: 1
-      - m_Value: 0.25
+      - m_Value: 0.5
         m_Name: Life Time Lower Bound
         m_Overridden: 1
-      - m_Value: 0.5
+      - m_Value: 1
         m_Name: Life Time Upper Bound
         m_Overridden: 1
       - m_Value: 0.5
@@ -73,7 +73,7 @@ VisualEffect:
       m_Array: []
     m_Vector4f:
       m_Array:
-      - m_Value: {x: 0.4093401, y: 0.027182203, z: 0, w: 1}
+      - m_Value: {x: 1.7169812, y: 0.11556603, z: 0, w: 1}
         m_Name: Color
         m_Overridden: 1
     m_Uint:

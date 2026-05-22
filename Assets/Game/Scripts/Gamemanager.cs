@@ -8,6 +8,11 @@ using UnityEngine.VFX;
 
 public class Gamemanager : NetworkBehaviour
 {
+    [Header("Connection")]
+    public GameObject isHostCube;
+    public GameObject isClientCube;
+    public Material checkMaterial;
+    
     [Header("BGM Setting")]
     public AudioController audioController;
 
@@ -94,6 +99,17 @@ public class Gamemanager : NetworkBehaviour
                 $"IsHost: {nm.IsHost} | IsClient: {nm.IsClient}\n" +
                 $"IsListening: {nm.IsListening} | IsConnectedClient: {nm.IsConnectedClient}\n" +
                 $"ClientId: {nm.LocalClientId} | ConnectedClients: {nm.ConnectedClientsIds.Count}";
+
+            if (nm.IsHost)
+            {
+                Renderer r = isHostCube.GetComponent<Renderer>();
+                if (r != null) r.material = checkMaterial;
+            }
+            if (nm.IsClient)
+            {
+                Renderer r = isClientCube.GetComponent<Renderer>();
+                if (r != null) r.material = checkMaterial;
+            }
         }
 
         bool t = false;
@@ -262,7 +278,7 @@ public class Gamemanager : NetworkBehaviour
 
     IEnumerator FireRound()
     {
-        yield return wait(3);
+        yield return wait(1);
         fire.SetActive(true);
     }
 
@@ -336,8 +352,7 @@ public class Gamemanager : NetworkBehaviour
             Debug.LogWarning("[Phase1] APIClient 未設定，無法發送。");
             return;
         }
-
-        string myData = IsHost ? "wind" : "water";
+        string myData = element;
         string role = IsHost ? "host" : "client";
 
         Debug.Log($"[Phase1] 發送自己的資料給 Server，role={role}, data={myData}");
