@@ -112,16 +112,17 @@ public class WindInteraction : MonoBehaviour
         wind2PhaseActive = false;
         audioController.StopAudio("Wind");
         Wind_Control_2("start");
-        yield return new WaitForSeconds(20f);
+        yield return new WaitForSeconds(10f);
         consoleUI.text = "第二階段結束十五秒互動期";
         Wind_Control_2("end");
         gamemanager.ShowHistory();
 
         // Third Interaction
+        Debug.Log("Third Interaction");
         audioController.StopAudio("Wind");
         audioController.PlayAudio("Wind", 4);
         wind_3.SetActive(true);
-        yield return new WaitForSeconds(15f);
+        yield return new WaitForSeconds(5f);
         windVFX_3.SetBool("Inverse", true);
         wind3PhaseStartHeadPos = player_head.transform.position;
         wind3PhaseStartForward = player_head.transform.forward;
