@@ -40,6 +40,7 @@ public class Gamemanager : NetworkBehaviour
     public List<char> charHistorys;
 
     [Header("Words Exchange")]
+    public GameObject wordGroup;
     public GameObject textVFX_prefab, player_head;
     public float wordsForwardDist = 1f;
     public float wordsVerticalOffset = -0.5f;
@@ -429,11 +430,14 @@ public class Gamemanager : NetworkBehaviour
     private void CheckBothPlayersReady()
     {
         if (isHostDone && isClientDone)
+        {
+            wordGroup.transform.position = new Vector3(0, 0, 0);
             TriggerSyncClientRpc();
-        wind.SetActive(false);
-        fire.SetActive(false);
-        water.SetActive(false);
-        dirt.SetActive(false);
+            wind.SetActive(false);
+            fire.SetActive(false);
+            water.SetActive(false);
+            dirt.SetActive(false);
+        }
     }
 
     [ClientRpc]
