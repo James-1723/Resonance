@@ -12293,9 +12293,9 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
+  - {fileID: 1816612153}
   - {fileID: 1653774584}
   - {fileID: 1153432728}
-  - {fileID: 1816612153}
   m_Father: {fileID: 657763101}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &681085301
@@ -31650,6 +31650,15 @@ MonoBehaviour:
   - {fileID: 1190427355}
   - {fileID: 114654545}
   - {fileID: 1035175110}
+  gameOver: 0
+  interactionTriggered: 00000000
+  isHostDone: 0
+  isClientDone: 0
+  activeRandomIndex: -1
+  hostSelectWord: 0
+  clientSelectWord: 0
+  hostSelectedWord: 
+  clientSelectedWord: 
 --- !u!114 &1816612149
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -31665,7 +31674,7 @@ MonoBehaviour:
   GlobalObjectIdHash: 2771336662
   InScenePlacedSourceGlobalObjectIdHash: 0
   AlwaysReplicateAsRoot: 1
-  SynchronizeTransform: 1
+  SynchronizeTransform: 0
   ActiveSceneSynchronization: 1
   SceneMigrationSynchronization: 1
   SpawnWithObservers: 1
@@ -31785,15 +31794,15 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   UseUnreliableDeltas: 0
-  SyncPositionX: 1
-  SyncPositionY: 1
-  SyncPositionZ: 1
-  SyncRotAngleX: 1
-  SyncRotAngleY: 1
-  SyncRotAngleZ: 1
-  SyncScaleX: 1
-  SyncScaleY: 1
-  SyncScaleZ: 1
+  SyncPositionX: 0
+  SyncPositionY: 0
+  SyncPositionZ: 0
+  SyncRotAngleX: 0
+  SyncRotAngleY: 0
+  SyncRotAngleZ: 0
+  SyncScaleX: 0
+  SyncScaleY: 0
+  SyncScaleZ: 0
   PositionThreshold: 0.001
   RotAngleThreshold: 0.01
   ScaleThreshold: 0.01

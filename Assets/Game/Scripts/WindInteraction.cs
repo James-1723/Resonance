@@ -55,8 +55,22 @@ public class WindInteraction : MonoBehaviour
     void Start()
     {
         audioController.PlayAudio("Wind", 0);
-        StartCoroutine(GameFlow());
-        wind_1_open(true);
+        if (gamemanager.gameOver == false)
+        {
+            StartCoroutine(GameFlow());
+            wind_1_open(true);
+        }
+        else
+        {
+            wind_1_open(true);
+            StartCoroutine(OTGame());
+        }
+    }
+
+    IEnumerator OTGame()
+    {
+        yield return new WaitForSeconds(3f);
+        wind_1_2(true);
     }
 
     IEnumerator GameFlow()
@@ -119,8 +133,9 @@ public class WindInteraction : MonoBehaviour
         consoleUI.text = "第三階段結束十秒互動期";
         audioController.StopAudio("Wind");
         Wind_Control_3("end");
-        gamemanager.ShowHistory();
-        gamemanager.LastRound();
+        // gamemanager.ShowHistory();
+        // gamemanager.LastRound();
+        gamemanager.NotifyPlayerDone();
     }
 
     void Update()
@@ -138,6 +153,11 @@ public class WindInteraction : MonoBehaviour
             {
                 wind2DetectedLatch = true;
             }
+        }
+
+        if (gamemanager.isClientDone && gamemanager.isHostDone)
+        {
+            wind_1_2(false);
         }
     }
 

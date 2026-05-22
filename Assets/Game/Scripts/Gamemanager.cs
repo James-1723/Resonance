@@ -47,6 +47,17 @@ public class Gamemanager : NetworkBehaviour
     public GameObject[] hostChars;
     public GameObject[] clientChars;
 
+    [Header("GameFlow Setting")]
+    public bool gameOver = false;
+    public bool[] interactionTriggered = new bool[4]{false, false, false, false};
+    public bool isHostDone = false;
+    public bool isClientDone = false;
+    public int activeRandomIndex = -1;
+    public bool hostSelectWord = false;
+    public bool clientSelectWord = false;
+    public string hostSelectedWord = "";
+    public string clientSelectedWord = "";
+
     void Start()
     {
         // charHistorys = new List<char>();
@@ -84,30 +95,55 @@ public class Gamemanager : NetworkBehaviour
                 $"ClientId: {nm.LocalClientId} | ConnectedClients: {nm.ConnectedClientsIds.Count}";
         }
 
-        if (Input.GetKeyDown(KeyCode.Space))
+        if (gameOver)
         {
-            // LastRound();
-            SendPhase1DataToServer("wind");
+            gameOver = false;
+
+            List<int> remaining = new List<int>();
+            for (int i = 0; i < interactionTriggered.Length; i++)
+            {
+                if (!interactionTriggered[i]) remaining.Add(i);
+            }
+
+            if (remaining.Count > 0)
+            {
+                activeRandomIndex = remaining[Random.Range(0, remaining.Count)];
+                ChooseElement(activeRandomIndex);
+                switch (activeRandomIndex)
+                {
+                    case 0: WindRound(); break;
+                    case 1: FireRound(); break;
+                    case 2: WaterRound(); break;
+                    case 3: DirtRound(); break;
+                }
+            }
+
         }
 
-        if (Input.GetKeyDown(KeyCode.W))
-        {
-            StartCoroutine(ExecuteAfterChooseElement(0, WindRound()));
-        }
-        else if (Input.GetKeyDown(KeyCode.E))
-        {
-            StartCoroutine(ExecuteAfterChooseElement(1, null));
-            // StartCoroutine(FireRound());
-        }
-        else if (Input.GetKeyDown(KeyCode.R))
-        {
-            StartCoroutine(ExecuteAfterChooseElement(2, WaterRound()));
-        }
-        else if (Input.GetKeyDown(KeyCode.T))
-        {
-            StartCoroutine(ExecuteAfterChooseElement(3, null));
-            // StartCoroutine(DirtRound());
-        }
+        // if (Input.GetKeyDown(KeyCode.Space))
+        // {
+        //     // LastRound();
+        //     SendPhase1DataToServer("wind");
+        // }
+
+        // if (Input.GetKeyDown(KeyCode.W))
+        // {
+        //     StartCoroutine(ExecuteAfterChooseElement(0, WindRound()));
+        // }
+        // else if (Input.GetKeyDown(KeyCode.E))
+        // {
+        //     StartCoroutine(ExecuteAfterChooseElement(1, null));
+        //     // StartCoroutine(FireRound());
+        // }
+        // else if (Input.GetKeyDown(KeyCode.R))
+        // {
+        //     StartCoroutine(ExecuteAfterChooseElement(2, WaterRound()));
+        // }
+        // else if (Input.GetKeyDown(KeyCode.T))
+        // {
+        //     StartCoroutine(ExecuteAfterChooseElement(3, null));
+        //     // StartCoroutine(DirtRound());
+        // }
     }
 
     IEnumerator ChooseElement(int index)
@@ -187,6 +223,25 @@ public class Gamemanager : NetworkBehaviour
                     SendPhase1DataToServer("dirt");
                     StartCoroutine(ExecuteAfterChooseElement(3, null));
                     break;
+            }
+        }
+
+        if (collider.gameObject.CompareTag("Words"))
+        {
+            TMP_Text tmp = collider.gameObject.GetComponentInChildren<TMP_Text>();
+            string word = tmp != null ? tmp.text : collider.gameObject.name;
+
+            if (IsHost && !hostSelectWord)
+            {
+                hostSelectWord = true;
+                hostSelectedWord = word;
+                CheckBothWordsSelected();
+            }
+            else if (!IsHost && !clientSelectWord)
+            {
+                clientSelectWord = true;
+                clientSelectedWord = word;
+                NotifyHostWordSelectedServerRpc(word);
             }
         }
     }
@@ -351,6 +406,71 @@ public class Gamemanager : NetworkBehaviour
         }
     }
 
+    public void NotifyPlayerDone()
+    {
+        if (IsHost)
+        {
+            isHostDone = true;
+            CheckBothPlayersReady();
+        }
+        else
+        {
+            NotifyHostDoneServerRpc();
+        }
+    }
+
+    [ServerRpc(RequireOwnership = false)]
+    private void NotifyHostDoneServerRpc()
+    {
+        isClientDone = true;
+        CheckBothPlayersReady();
+    }
+
+    private void CheckBothPlayersReady()
+    {
+        if (isHostDone && isClientDone)
+            TriggerSyncClientRpc();
+        wind.SetActive(false);
+        fire.SetActive(false);
+        water.SetActive(false);
+        dirt.SetActive(false);
+    }
+
+    [ClientRpc]
+    private void TriggerSyncClientRpc()
+    {
+        switch (activeRandomIndex)
+        {
+            case 0: if (wind  != null) wind.SetActive(false);  break;
+            case 1: if (fire  != null) fire.SetActive(false);  break;
+            case 2: if (water != null) water.SetActive(false); break;
+            case 3: if (dirt  != null) dirt.SetActive(false);  break;
+        }
+        activeRandomIndex = -1;
+
+        if (!IsHost) SyncHistoryDataToHost();
+    }
+
+    [ServerRpc(RequireOwnership = false)]
+    private void NotifyHostWordSelectedServerRpc(string word)
+    {
+        clientSelectWord = true;
+        clientSelectedWord = word;
+        CheckBothWordsSelected();
+    }
+
+    private void CheckBothWordsSelected()
+    {
+        if (hostSelectWord && clientSelectWord)
+            TriggerFusionClientRpc();
+    }
+
+    [ClientRpc]
+    private void TriggerFusionClientRpc()
+    {
+        if (!IsHost) RequestFusionDataToHost();
+    }
+
     /// <summary>
     /// 第二階段 (步驟 2)：Client 將自己的資料送給 Host，再由 Host 送去 Server，取得回傳的融合字後顯示在第四個位置。
     /// </summary>
@@ -359,10 +479,9 @@ public class Gamemanager : NetworkBehaviour
         string myHistoryData = new string(charHistorys.ToArray());
         if (IsClient && !IsHost)
         {
-            myHistoryData = "EFG"; // TODO: 移除測試用資料
             communicateUI.text = "Client 準備發送資料給 Host 以進行融合...";
             Debug.Log("Client 準備發送資料給 Host 以進行融合...");
-            RequestFusionServerRpc(myHistoryData, NetworkManager.Singleton.LocalClientId);
+            RequestFusionServerRpc(clientSelectedWord, NetworkManager.Singleton.LocalClientId);
         }
         else if (IsHost)
         {
@@ -376,7 +495,7 @@ public class Gamemanager : NetworkBehaviour
     {
         Debug.Log($"Host 成功接收到來自 Client (ID: {clientId}) 的資料: {clientData}，準備請求融合");
 
-        string hostData = string.Join("", this.charHistorys.ToArray());
+        string hostData = hostSelectedWord;
 
         if (apiClient != null)
         {

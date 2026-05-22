@@ -46,7 +46,20 @@ public class WaterInteraction : ParticleControlTemplate
     void Start()
     {
         // audioController.PlayAudio("Water", 0);
-        StartCoroutine(GameFlow());
+        if (gamemanager.gameOver == false)
+        {
+            StartCoroutine(GameFlow());
+        }
+        else
+        {
+            StartCoroutine(OTGame());
+        }
+    }
+
+    IEnumerator OTGame()
+    {
+        yield return new WaitForSeconds(3f);
+        water_1_1(true);
     }
 
     IEnumerator GameFlow()
@@ -115,11 +128,18 @@ public class WaterInteraction : ParticleControlTemplate
         yield return new WaitForSeconds(10f);
         Water_Control_3("end");
         consoleUI.text = "第三關結束";
-        gamemanager.LastRound();
+        water_3(false);
+        // gamemanager.LastRound();
+        gamemanager.NotifyPlayerDone();
     }
 
     void Update()
     {
+        if (gamemanager.isClientDone && gamemanager.isHostDone)
+        {
+            water_1_1(false);
+        }
+        
         if (water1PhaseActive)
         {
             if (player_hand.transform.position.y - water1StartHandY > water1_hand_up_threshold)
