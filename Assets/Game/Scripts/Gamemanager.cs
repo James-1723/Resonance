@@ -87,7 +87,7 @@ public class Gamemanager : NetworkBehaviour
         if (Input.GetKeyDown(KeyCode.Space))
         {
             // LastRound();
-            SendPhase1DataToServer();
+            SendPhase1DataToServer("wind");
         }
 
         if (Input.GetKeyDown(KeyCode.W))
@@ -169,18 +169,22 @@ public class Gamemanager : NetworkBehaviour
             {
                 case "Wind_Collider":
                     Debug.Log("Wind");
+                    SendPhase1DataToServer("wind");
                     StartCoroutine(ExecuteAfterChooseElement(0, WindRound()));
                     break;
                 case "Fire_Collider":
                     Debug.Log("Fire");
+                    SendPhase1DataToServer("fire");
                     StartCoroutine(ExecuteAfterChooseElement(1, FireRound()));
                     break;
                 case "Water_Collider":
                     Debug.Log("Water");
+                    SendPhase1DataToServer("water");
                     StartCoroutine(ExecuteAfterChooseElement(2, WaterRound()));
                     break;
                 case "Dirt_Collider":
                     Debug.Log("Dirt");
+                    SendPhase1DataToServer("dirt");
                     StartCoroutine(ExecuteAfterChooseElement(3, null));
                     break;
             }
@@ -268,7 +272,7 @@ public class Gamemanager : NetworkBehaviour
     /// <summary>
     /// 第一階段：各自獨立將自己的字串送給 PC Server，不需要等對方。
     /// </summary>
-    public void SendPhase1DataToServer()
+    public void SendPhase1DataToServer(string element)
     {
         if (apiClient == null)
         {
