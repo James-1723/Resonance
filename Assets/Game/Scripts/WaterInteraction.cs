@@ -129,6 +129,9 @@ public class WaterInteraction : ParticleControlTemplate
         Water_Control_3("end");
         consoleUI.text = "第三關結束";
         water_3(false);
+        water_1_1(false);
+        water_1_2_rain(false);
+        gamemanager.gameOver = true;
         // gamemanager.LastRound();
         gamemanager.NotifyPlayerDone();
     }
@@ -183,6 +186,7 @@ public class WaterInteraction : ParticleControlTemplate
             }
             else
             {
+                Debug.Log("Water 1: 隨");
                 water_1_A(true);
                 gamemanager.AddCharToHistory('隨');
             }

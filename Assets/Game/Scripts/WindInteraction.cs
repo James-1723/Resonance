@@ -95,7 +95,7 @@ public class WindInteraction : MonoBehaviour
 
         // 根據累積結果決定觸發哪個
         Wind_Control_1("start");
-        yield return new WaitForSeconds(10f);
+        yield return new WaitForSeconds(15f);
         Wind_Control_1("end");
         consoleUI.text = "第一階段結束十秒互動期";
         gamemanager.ShowHistory();
@@ -112,7 +112,7 @@ public class WindInteraction : MonoBehaviour
         wind2PhaseActive = false;
         audioController.StopAudio("Wind");
         Wind_Control_2("start");
-        yield return new WaitForSeconds(15f);
+        yield return new WaitForSeconds(20f);
         consoleUI.text = "第二階段結束十五秒互動期";
         Wind_Control_2("end");
         gamemanager.ShowHistory();
@@ -121,7 +121,7 @@ public class WindInteraction : MonoBehaviour
         audioController.StopAudio("Wind");
         audioController.PlayAudio("Wind", 4);
         wind_3.SetActive(true);
-        yield return new WaitForSeconds(3f);
+        yield return new WaitForSeconds(15f);
         windVFX_3.SetBool("Inverse", true);
         wind3PhaseStartHeadPos = player_head.transform.position;
         wind3PhaseStartForward = player_head.transform.forward;
@@ -129,7 +129,7 @@ public class WindInteraction : MonoBehaviour
         audioController.StopAudio("Wind");
         consoleUI.text = "第三階段結束十秒觀察期";
         Wind_Control_3("start");
-        yield return new WaitForSeconds(10f);
+        yield return new WaitForSeconds(20f);
         consoleUI.text = "第三階段結束十秒互動期";
         audioController.StopAudio("Wind");
         Wind_Control_3("end");

@@ -61,7 +61,7 @@ public class Gamemanager : NetworkBehaviour
 
     void Start()
     {
-        // charHistorys = new List<char>();
+        charHistorys = new List<char>();
         if (audioController != null)
         {
             audioController.PlayAudio("SoundEffect", 0);
@@ -96,7 +96,8 @@ public class Gamemanager : NetworkBehaviour
                 $"ClientId: {nm.LocalClientId} | ConnectedClients: {nm.ConnectedClientsIds.Count}";
         }
 
-        if (gameOver)
+        bool t = false;
+        if (t == false)
         {
             gameOver = false;
 
@@ -351,7 +352,7 @@ public class Gamemanager : NetworkBehaviour
         string myHistoryData = new string(charHistorys.ToArray());
         if (IsClient && !IsHost)
         {
-            myHistoryData = "EFG"; // TODO: 移除測試用資料
+            // myHistoryData = "EFG"; // TODO: 移除測試用資料
             communicateUI.text = "Client 準備發送資料給 Host 作為顯示...";
             Debug.Log("Client 準備發送資料給 Host 作為顯示...");
             SyncHistoryServerRpc(myHistoryData);
@@ -409,6 +410,7 @@ public class Gamemanager : NetworkBehaviour
 
     public void NotifyPlayerDone()
     {
+        Debug.Log("NotifyPlayerDone");
         if (IsHost)
         {
             isHostDone = true;
@@ -431,12 +433,11 @@ public class Gamemanager : NetworkBehaviour
     {
         if (isHostDone && isClientDone)
         {
-            wordGroup.transform.position = new Vector3(0, 0, 0);
             TriggerSyncClientRpc();
             wind.SetActive(false);
-            fire.SetActive(false);
+            // fire.SetActive(false);
             water.SetActive(false);
-            dirt.SetActive(false);
+            // dirt.SetActive(false);
         }
     }
 
