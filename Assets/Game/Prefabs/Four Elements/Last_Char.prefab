@@ -55,7 +55,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   blockId: e9b4b64f-1c7e-4dff-8f3c-ce409bdc3951
-  instanceId: 4ebadb1e-71d4-48d7-af16-f0cdc8f395ec
+  instanceId: 7d452089-fe9a-4cd3-8f6a-12bd0cf45332
   version: 1
   installationRoutineCheckpoint:
     _installationRoutineId: d5c83ff6-47e4-4c98-acdd-041d4686912f
@@ -218,7 +218,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   blockId: f8766c17-aaf8-4b55-9431-de8deea83842
-  instanceId: 6eec7c09-982d-4a78-9505-5084a58e446b
+  instanceId: df5aae7a-1e67-479c-bd97-63e20ecb1896
   version: 1
   installationRoutineCheckpoint:
     _installationRoutineId: f8338144-8280-4ff6-9455-ae2bb9c20fe8
@@ -466,7 +466,7 @@ PrefabInstance:
     - target: {fileID: 1102228823126799133, guid: 3a10dc2f1fe8443ee8c6cf7e595825aa,
         type: 3}
       propertyPath: m_PropertySheet.m_Float.m_Array.Array.size
-      value: 6
+      value: 7
       objectReference: {fileID: 0}
     - target: {fileID: 1102228823126799133, guid: 3a10dc2f1fe8443ee8c6cf7e595825aa,
         type: 3}
@@ -505,13 +505,18 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 1102228823126799133, guid: 3a10dc2f1fe8443ee8c6cf7e595825aa,
         type: 3}
+      propertyPath: m_PropertySheet.m_Float.m_Array.Array.data[6].m_Name
+      value: Intensity
+      objectReference: {fileID: 0}
+    - target: {fileID: 1102228823126799133, guid: 3a10dc2f1fe8443ee8c6cf7e595825aa,
+        type: 3}
       propertyPath: m_PropertySheet.m_Uint.m_Array.Array.data[0].m_Value
       value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 1102228823126799133, guid: 3a10dc2f1fe8443ee8c6cf7e595825aa,
         type: 3}
       propertyPath: m_PropertySheet.m_Uint.m_Array.Array.data[1].m_Value
-      value: 2500
+      value: 8000
       objectReference: {fileID: 0}
     - target: {fileID: 1102228823126799133, guid: 3a10dc2f1fe8443ee8c6cf7e595825aa,
         type: 3}
@@ -531,12 +536,17 @@ PrefabInstance:
     - target: {fileID: 1102228823126799133, guid: 3a10dc2f1fe8443ee8c6cf7e595825aa,
         type: 3}
       propertyPath: m_PropertySheet.m_Float.m_Array.Array.data[3].m_Value
-      value: 0.01
+      value: 0.005
       objectReference: {fileID: 0}
     - target: {fileID: 1102228823126799133, guid: 3a10dc2f1fe8443ee8c6cf7e595825aa,
         type: 3}
       propertyPath: m_PropertySheet.m_Float.m_Array.Array.data[4].m_Value
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1102228823126799133, guid: 3a10dc2f1fe8443ee8c6cf7e595825aa,
+        type: 3}
+      propertyPath: m_PropertySheet.m_Float.m_Array.Array.data[6].m_Value
+      value: 0.25
       objectReference: {fileID: 0}
     - target: {fileID: 1102228823126799133, guid: 3a10dc2f1fe8443ee8c6cf7e595825aa,
         type: 3}
@@ -561,6 +571,11 @@ PrefabInstance:
     - target: {fileID: 1102228823126799133, guid: 3a10dc2f1fe8443ee8c6cf7e595825aa,
         type: 3}
       propertyPath: m_PropertySheet.m_Float.m_Array.Array.data[5].m_Overridden
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 1102228823126799133, guid: 3a10dc2f1fe8443ee8c6cf7e595825aa,
+        type: 3}
+      propertyPath: m_PropertySheet.m_Float.m_Array.Array.data[6].m_Overridden
       value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 1102228823126799133, guid: 3a10dc2f1fe8443ee8c6cf7e595825aa,

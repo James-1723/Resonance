@@ -112,8 +112,8 @@ public class Gamemanager : NetworkBehaviour
             }
         }
 
-        bool t = false;
-        if (t == false)
+        gameOver = false;
+        if (gameOver == true)
         {
             gameOver = false;
 
@@ -244,10 +244,11 @@ public class Gamemanager : NetworkBehaviour
             }
         }
 
-        if (collider.gameObject.CompareTag("Words"))
+        if (collider.gameObject.CompareTag("Words") && isHostDone && isClientDone)
         {
-            TMP_Text tmp = collider.gameObject.GetComponentInChildren<TMP_Text>();
-            string word = tmp != null ? tmp.text : collider.gameObject.name;
+            TMP_Text tmp = collider.transform.parent?.GetComponentInChildren<TMP_Text>();
+            if (tmp == null) return;
+            string word = tmp.text;
 
             if (IsHost && !hostSelectWord)
             {

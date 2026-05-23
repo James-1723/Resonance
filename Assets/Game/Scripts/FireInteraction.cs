@@ -108,7 +108,7 @@ public class FireInteraction : ParticleControlTemplate
                     Transform fireChild = pos.transform.Find("PointFire");
                     if (fireChild != null && !fireChild.gameObject.activeSelf)
                         fireChild.gameObject.SetActive(true);
-                    audioController.PlayAudio("Addition", 11);
+                    audioController.PlayAudio("SoundEffect", 11);
                 }
             }
             yield return null;
@@ -123,7 +123,7 @@ public class FireInteraction : ParticleControlTemplate
         firstFirePositions[nearestIdx].SetActive(true);
         if (isBurning == false) 
         {
-            audioController.PlayAudio("Addition", 10);
+            audioController.PlayAudio("SoundEffect", 10);
             isBurning = true;
         }
 

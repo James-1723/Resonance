@@ -18657,6 +18657,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9a116bae24b4c4e51a5a1814df16196b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  isHostCube: {fileID: 0}
+  isClientCube: {fileID: 0}
+  checkMaterial: {fileID: 0}
   audioController: {fileID: 0}
   basicElements: []
   wind: {fileID: 0}
@@ -18711,20 +18714,23 @@ MonoBehaviour:
   consoleUI_1_1: {fileID: 0}
   consoleUI_1_2: {fileID: 0}
   consoleUI_1_4: {fileID: 0}
-  initialFire: {fileID: 3783821696555447808, guid: 0182d035f70cf4a4e94789e8d1495d75,
-    type: 3}
+  hand: {fileID: 0}
+  fireBackground: {fileID: 0}
+  handFire: {fileID: 0}
   firePath: {fileID: 7362097552023779767, guid: 0b05598a8a5744b038fd301520f7adcd,
     type: 3}
   fireIndicator: {fileID: 0}
   firePath_speed: 1
-  torch: {fileID: 1010903120053572556, guid: f9d621e590918ea4a84d084e50d09fe5, type: 3}
-  torchFire: {fileID: 919132149155446097, guid: 5d1b16c9db8fa474faa26113593c8b21,
-    type: 3}
   firstFirePositions:
   - {fileID: 1842832769}
   - {fileID: 1980393255}
   - {fileID: 1929691608}
   - {fileID: 697450541}
+  secondFirePositions: []
+  wait_1: 5
+  wait_2: 20
+  wait_3: 20
+  wait_4: 20
 --- !u!4 &1451217730
 Transform:
   m_ObjectHideFlags: 0
@@ -28000,7 +28006,7 @@ PrefabInstance:
     - target: {fileID: 1010903120053572556, guid: f9d621e590918ea4a84d084e50d09fe5,
         type: 3}
       propertyPath: m_IsActive
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 5988664418106118930, guid: f9d621e590918ea4a84d084e50d09fe5,
         type: 3}
