@@ -58,6 +58,7 @@ public class Gamemanager : NetworkBehaviour
     public bool[] interactionTriggered = new bool[4]{false, false, false, false};
     public bool isHostDone = false;
     public bool isClientDone = false;
+    public bool bothPlayersDone = false;
     public int activeRandomIndex = -1;
     public bool hostSelectWord = false;
     public bool clientSelectWord = false;
@@ -137,31 +138,6 @@ public class Gamemanager : NetworkBehaviour
             }
 
         }
-
-        // if (Input.GetKeyDown(KeyCode.Space))
-        // {
-        //     // LastRound();
-        //     SendPhase1DataToServer("wind");
-        // }
-
-        // if (Input.GetKeyDown(KeyCode.W))
-        // {
-        //     StartCoroutine(ExecuteAfterChooseElement(0, WindRound()));
-        // }
-        // else if (Input.GetKeyDown(KeyCode.E))
-        // {
-        //     StartCoroutine(ExecuteAfterChooseElement(1, null));
-        //     // StartCoroutine(FireRound());
-        // }
-        // else if (Input.GetKeyDown(KeyCode.R))
-        // {
-        //     StartCoroutine(ExecuteAfterChooseElement(2, WaterRound()));
-        // }
-        // else if (Input.GetKeyDown(KeyCode.T))
-        // {
-        //     StartCoroutine(ExecuteAfterChooseElement(3, null));
-        //     // StartCoroutine(DirtRound());
-        // }
     }
 
     IEnumerator ChooseElement(int index)
@@ -239,16 +215,17 @@ public class Gamemanager : NetworkBehaviour
                 case "Dirt_Collider":
                     Debug.Log("Dirt");
                     SendPhase1DataToServer("dirt");
-                    StartCoroutine(ExecuteAfterChooseElement(3, null));
+                    StartCoroutine(ExecuteAfterChooseElement(3, DirtRound()));
                     break;
             }
         }
 
-        if (collider.gameObject.CompareTag("Words") && isHostDone && isClientDone)
+        if (collider.gameObject.CompareTag("Words"))
         {
-            TMP_Text tmp = collider.transform.parent?.GetComponentInChildren<TMP_Text>();
-            if (tmp == null) return;
-            string word = tmp.text;
+            if (!bothPlayersDone) return;
+
+            if (charHistorys == null || charHistorys.Count == 0) return;
+            string word = charHistorys[0].ToString();
 
             if (IsHost && !hostSelectWord)
             {
@@ -289,9 +266,10 @@ public class Gamemanager : NetworkBehaviour
         water.SetActive(true);
     }
 
-    void DirtRound()
+    IEnumerator DirtRound()
     {
-        
+        yield return wait(1);
+        dirt.SetActive(true);
     }
 
     public void LastRound()
@@ -426,6 +404,7 @@ public class Gamemanager : NetworkBehaviour
 
     public void NotifyPlayerDone()
     {
+        fire.SetActive(false);
         Debug.Log("NotifyPlayerDone");
         if (IsHost)
         {
@@ -460,6 +439,8 @@ public class Gamemanager : NetworkBehaviour
     [ClientRpc]
     private void TriggerSyncClientRpc()
     {
+        bothPlayersDone = true;
+
         switch (activeRandomIndex)
         {
             case 0: if (wind  != null) wind.SetActive(false);  break;
@@ -531,21 +512,21 @@ public class Gamemanager : NetworkBehaviour
                 else
                 {
                     Debug.LogWarning("[Phase2] Server 回傳失敗或格式有誤，使用備援字。");
-                    ApplyFusionResultClientRpc("X"); // fallback
+                    ApplyFusionResultClientRpc(""); // fallback
                 }
             });
         }
         else
         {
             Debug.LogWarning("[Phase2] APIClient 未設定，直接使用備援字。");
-            ApplyFusionResultClientRpc("X");
+            ApplyFusionResultClientRpc("");
         }
     }
 
     [ClientRpc]
     public void ApplyFusionResultClientRpc(string fusionResult)
     {
-        string res = string.IsNullOrEmpty(fusionResult) ? "X" : fusionResult;
+        string res = string.IsNullOrEmpty(fusionResult) ? "" : fusionResult;
         char fChar = res[0]; // 拿回傳的那一個字
 
         if (hostChars.Length > 3)

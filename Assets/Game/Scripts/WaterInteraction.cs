@@ -46,14 +46,7 @@ public class WaterInteraction : ParticleControlTemplate
     void Start()
     {
         // audioController.PlayAudio("Water", 0);
-        if (gamemanager.gameOver == false)
-        {
-            StartCoroutine(GameFlow());
-        }
-        else
-        {
-            StartCoroutine(OTGame());
-        }
+        StartCoroutine(GameFlow());
     }
 
     IEnumerator OTGame()
